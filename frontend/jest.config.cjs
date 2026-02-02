@@ -1,0 +1,22 @@
+module.exports = {
+  preset: "ts-jest/presets/default-esm",
+  testEnvironment: "jsdom",
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
+  testMatch: ["**/__tests__/**/*.test.ts?(x)"] ,
+  moduleNameMapper: {
+    "^@app$": "<rootDir>/src/app/index.ts",
+    "^@app/(.*)$": "<rootDir>/src/app/$1",
+    "^@processes/(.*)$": "<rootDir>/src/processes/$1",
+    "^@pages/(.*)$": "<rootDir>/src/pages/$1",
+    "^@widgets/(.*)$": "<rootDir>/src/widgets/$1",
+    "^@features/(.*)$": "<rootDir>/src/features/$1",
+    "^@entities/(.*)$": "<rootDir>/src/entities/$1",
+    "^@shared/(.*)$": "<rootDir>/src/shared/$1",
+    "^@ui/(.*)$": "<rootDir>/src/shared/ui/$1",
+    "^@lib/(.*)$": "<rootDir>/src/shared/lib/$1",
+    "^@config/(.*)$": "<rootDir>/src/shared/config/$1",
+    "^@api/(.*)$": "<rootDir>/src/shared/api/$1",
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+  },
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+};

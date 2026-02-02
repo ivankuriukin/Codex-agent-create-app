@@ -1,0 +1,14 @@
+schema: "src/shared/api/schema.graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/shared/api/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+      gqlImport: "@apollo/client#gql"
+      reactApolloVersion: 3
