@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { authResolvers } from "../src/auth/resolvers.js";
 import { issueTokens, verifyRefreshToken } from "../src/auth/service.js";
 import { signAccessToken, signRefreshToken } from "../src/auth/tokens.js";
-import { prismaMock, users, resetPrismaMock } from "./mocks/prisma";
+import { prismaMock, users, resetPrismaMock, type User } from "./mocks/prisma";
 
 type CookieResponse = {
   cookie: jest.Mock;
@@ -41,7 +41,7 @@ describe("auth", () => {
     });
 
     const { refreshToken } = await issueTokens(user.id);
-    const stored = users.get(user.id);
+    const stored = users.get(user.id) as User | undefined;
 
     expect(stored).toBeDefined();
     expect(stored?.refreshTokenHash).toBeTruthy();
@@ -122,7 +122,7 @@ describe("auth", () => {
       req: asRequest(req),
       res: asClearCookieResponse(res),
     });
-    const updated = users.get(user.id);
+    const updated = users.get(user.id) as User | undefined;
 
     expect(result).toBe(true);
     expect(updated).toBeDefined();

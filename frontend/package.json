@@ -5,20 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "codegen": "if [ -f ../backend/package.json ]; then (cd ../backend && npm run schema:generate && cp schema.graphql ../frontend/src/shared/api/schema.graphql); fi && graphql-codegen --config codegen.yml",
+    "codegen": "sh ./scripts/codegen.sh",
     "build": "yarn codegen && tsc && vite build",
     "preview": "vite preview",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@apollo/client": "3.11.8",
     "@ant-design/icons": "6.0.0",
-    "antd": "6.0.0",
+    "@apollo/client": "3.11.8",
     "@tanstack/react-router": "1.0.0",
+    "antd": "6.0.0",
+    "antd-style": "^4.1.0",
+    "dayjs": "1.11.11",
     "graphql": "16.9.0",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "react-use": "^17.6.0"
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",

@@ -1,9 +1,9 @@
-import { Button, Card, Typography, Flex, Form, Input } from "antd";
+import { Button, Card, Flex, Form, Input, Typography } from "antd";
 import { useAuthStore } from "@entities/auth";
 import { useAuthStyles } from "@pages/auth/auth.styles";
 import { Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
 
-export function AuthPage() {
+export function RegisterPage() {
   const authStore = useAuthStore();
   const { styles } = useAuthStyles();
   const [form] = Form.useForm();
@@ -19,16 +19,23 @@ export function AuthPage() {
 
   return (
     <Flex className={styles.center} align="center" justify="center">
-      <Card title="Login" className={styles.card}>
+      <Card title="Register" className={styles.card}>
         <Form
           form={form}
           layout="vertical"
           onFinish={async (values) => {
-            await authStore.login(values);
+            await authStore.register(values);
             navigate({ to: redirectTarget });
           }}
           requiredMark="optional"
         >
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true }]}
+          >
+            <Input placeholder="John Doe" />
+          </Form.Item>
           <Form.Item
             label="Email"
             name="email"
@@ -48,21 +55,21 @@ export function AuthPage() {
               type="link"
               onClick={() =>
                 navigate({
-                  to: "/register",
+                  to: "/auth",
                   search: { redirect: redirectTarget } as { redirect?: string },
                 })
               }
             >
-              Create account
+              Back to login
             </Button>
             <Button type="primary" htmlType="submit" loading={false}>
-              Login
+              Create account
             </Button>
           </Flex>
         </Form>
         {authStore.user?.email && (
           <Typography.Paragraph>
-            Logged in as: {authStore.user.email}
+            Registered as: {authStore.user.email}
           </Typography.Paragraph>
         )}
       </Card>

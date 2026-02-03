@@ -1,85 +1,57 @@
 import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Layout, Button, Card, Typography, Tooltip, Space, Avatar, Divider } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from "@ant-design/icons";
+import { Layout, Button, Typography, Tooltip, Flex, Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { SidebarNav } from "@app/layouts/SidebarNav";
-import { useAppLayoutStore } from "@app/layouts/app-layout-store";
+import { useAppLayoutStyles } from "@app/layouts/app-layout.styles";
 
-const { Sider, Header, Content } = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 
 export function AppLayout() {
-  const store = useAppLayoutStore();
+  const { styles } = useAppLayoutStyles();
   const navigate = useNavigate();
-  const pathname = useRouterState({
-    select: (state) => state.location.pathname,
+  const location = useRouterState({
+    select: (state) => state.location,
   });
+  const pathname = location.pathname;
 
   return (
-    <Layout>
-      <Sider width={256} collapsedWidth={80} collapsed={store.isCollapsed} trigger={null}>
-        <Space direction="vertical" size="middle">
-          <Space align="center" size="middle">
+    <Layout className={styles.root}>
+      <Header className={styles.header}>
+        <Flex align="center" justify="space-between" gap="large">
+          <Flex align="center" gap="middle">
             <Avatar shape="square" size={36}>E</Avatar>
-            {!store.isCollapsed && (
-              <Typography.Text strong>EMBER UI</Typography.Text>
-            )}
-          </Space>
-          <Button
-            type="text"
-            aria-label="Toggle navigation"
-            icon={store.isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={store.toggleSidebar}
-          />
-        </Space>
-
-        <Divider />
-
-        <SidebarNav
-          isCollapsed={store.isCollapsed}
-          pathname={pathname}
-          onNavigate={(to) => navigate({ to })}
-        />
-
-        <Space direction="vertical" size="middle">
-          {store.isCollapsed ? (
-            <Tooltip title="Auth">
-              <Button
-                type="primary"
-                shape="circle"
-                icon={<UserOutlined />}
-                aria-label="Auth"
-                onClick={() => navigate({ to: "/auth" })}
-              />
-            </Tooltip>
-          ) : (
+            <Typography.Text strong>EMBER UI</Typography.Text>
+          </Flex>
+          <Tooltip title="Profile">
             <Button
-              type="primary"
+              type="text"
               icon={<UserOutlined />}
-              onClick={() => navigate({ to: "/auth" })}
+              onClick={() => navigate({ to: "/profile" })}
             >
-              Auth
+              Profile
             </Button>
-          )}
+          </Tooltip>
+        </Flex>
+      </Header>
 
-          <Card title="Current space">
-            <Typography.Text>Midnight Studio</Typography.Text>
-          </Card>
-        </Space>
-      </Sider>
+      <Layout className={styles.main}>
+        <Sider width={240} className={styles.sider}>
+          <SidebarNav pathname={pathname} onNavigate={(to) => navigate({ to })} />
+        </Sider>
 
-      <Layout>
-        <Header>
-          <Space align="baseline">
-            <Typography.Title level={4}>Dashboard</Typography.Title>
-            <Typography.Text type="secondary">Overview</Typography.Text>
-          </Space>
-        </Header>
-
-        <Content>
-          <Space direction="vertical" size="large">
+        <Content className={styles.content}>
+          <Flex vertical gap="large">
             <Outlet />
-          </Space>
+          </Flex>
         </Content>
       </Layout>
+
+      <Footer className={styles.footer}>
+        <Flex align="center" justify="space-between">
+          <Typography.Text>Midnight Studio</Typography.Text>
+          <Typography.Text type="secondary">© 2026</Typography.Text>
+        </Flex>
+      </Footer>
     </Layout>
   );
 }

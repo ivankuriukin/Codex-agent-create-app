@@ -3,6 +3,12 @@ query Me {
     id
     email
     name
+    firstName
+    lastName
+    middleName
+    description
+    photoUrl
+    birthDate
     createdAt
   }
 }
@@ -13,6 +19,12 @@ mutation Register($email: String!, $password: String!, $name: String) {
       id
       email
       name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
       createdAt
     }
   }
@@ -24,6 +36,12 @@ mutation Login($email: String!, $password: String!) {
       id
       email
       name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
       createdAt
     }
   }
@@ -35,6 +53,12 @@ mutation Refresh {
       id
       email
       name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
       createdAt
     }
   }

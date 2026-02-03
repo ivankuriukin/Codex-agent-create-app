@@ -3,11 +3,26 @@ export const typeDefs = `#graphql
     id: ID!
     email: String!
     name: String
+    firstName: String
+    lastName: String
+    middleName: String
+    description: String
+    photoUrl: String
+    birthDate: String
     createdAt: String!
   }
 
   type AuthPayload {
     user: User!
+  }
+
+  input UpdateProfileInput {
+    firstName: String
+    lastName: String
+    middleName: String
+    description: String
+    photoUrl: String
+    birthDate: String
   }
 
   type Query {
@@ -19,5 +34,6 @@ export const typeDefs = `#graphql
     login(email: String!, password: String!): AuthPayload!
     refresh: AuthPayload!
     logout: Boolean!
+    updateProfile(input: UpdateProfileInput!): AuthPayload!
   }
 `;

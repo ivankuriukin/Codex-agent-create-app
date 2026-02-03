@@ -1,4 +1,4 @@
-import { Card, Tag, Typography, Row, Col, Space, List } from "antd";
+import { Card, Tag, Typography, Row, Col, Flex, List } from "antd";
 import { ThunderboltOutlined, RocketOutlined, DatabaseOutlined } from "@ant-design/icons";
 
 const stats = [
@@ -9,7 +9,7 @@ const stats = [
 
 export function HomePage() {
   return (
-    <Space direction="vertical" size="large">
+    <Flex vertical gap="large">
       <Card title="Добро пожаловать в панель управления">
         <Typography.Paragraph type="secondary">
           Собрано на Ant Design с тёмной темой и встроенной системой компонентов.
@@ -41,6 +41,6 @@ export function HomePage() {
           )}
         />
       </Card>
-    </Space>
+    </Flex>
   );
 }

@@ -5,17 +5,20 @@ import { AuthProvider } from "@app/providers/AuthProvider";
 import { useAuthStore, type AuthUser } from "@entities/auth";
 import type {
   LoginMutationFn,
+  RegisterMutationFn,
   RefreshMutationFn,
   LogoutMutationFn,
 } from "@shared/api/graphql";
 
 const mockLogin = jest.fn() as jest.MockedFunction<LoginMutationFn>;
+const mockRegister = jest.fn() as jest.MockedFunction<RegisterMutationFn>;
 const mockRefresh = jest.fn() as jest.MockedFunction<RefreshMutationFn>;
 const mockLogout = jest.fn() as jest.MockedFunction<LogoutMutationFn>;
 
 jest.mock("@shared/api/graphql", () => ({
-  useMeQuery: () => ({ data: { me: null } }),
+  useMeQuery: () => ({ data: { me: null }, loading: false }),
   useLoginMutation: () => [mockLogin],
+  useRegisterMutation: () => [mockRegister],
   useRefreshMutation: () => [mockRefresh],
   useLogoutMutation: () => [mockLogout],
 }));

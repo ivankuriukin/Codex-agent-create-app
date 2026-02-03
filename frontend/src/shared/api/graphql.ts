@@ -28,6 +28,7 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   refresh: AuthPayload;
   register: AuthPayload;
+  updateProfile: AuthPayload;
 };
 
 
@@ -43,23 +44,43 @@ export type MutationRegisterArgs = {
   password: Scalars['String']['input'];
 };
 
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
 };
 
+export type UpdateProfileInput = {
+  birthDate?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  middleName?: InputMaybe<Scalars['String']['input']>;
+  photoUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type User = {
   __typename?: 'User';
+  birthDate?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  lastName?: Maybe<Scalars['String']['output']>;
+  middleName?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  photoUrl?: Maybe<Scalars['String']['output']>;
 };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, name?: string | null, createdAt: string } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, name?: string | null, firstName?: string | null, lastName?: string | null, middleName?: string | null, description?: string | null, photoUrl?: string | null, birthDate?: string | null, createdAt: string } | null };
 
 export type RegisterMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -68,7 +89,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string, name?: string | null, createdAt: string } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string, name?: string | null, firstName?: string | null, lastName?: string | null, middleName?: string | null, description?: string | null, photoUrl?: string | null, birthDate?: string | null, createdAt: string } } };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -76,12 +97,12 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string, name?: string | null, createdAt: string } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string, name?: string | null, firstName?: string | null, lastName?: string | null, middleName?: string | null, description?: string | null, photoUrl?: string | null, birthDate?: string | null, createdAt: string } } };
 
 export type RefreshMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RefreshMutation = { __typename?: 'Mutation', refresh: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string, name?: string | null, createdAt: string } } };
+export type RefreshMutation = { __typename?: 'Mutation', refresh: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string, name?: string | null, firstName?: string | null, lastName?: string | null, middleName?: string | null, description?: string | null, photoUrl?: string | null, birthDate?: string | null, createdAt: string } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -95,6 +116,12 @@ export const MeDocument = gql`
     id
     email
     name
+    firstName
+    lastName
+    middleName
+    description
+    photoUrl
+    birthDate
     createdAt
   }
 }
@@ -123,9 +150,6 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
         }
-// @ts-ignore
-export function useMeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>): Apollo.UseSuspenseQueryResult<MeQuery, MeQueryVariables>;
-export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>): Apollo.UseSuspenseQueryResult<MeQuery | undefined, MeQueryVariables>;
 export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
@@ -141,6 +165,12 @@ export const RegisterDocument = gql`
       id
       email
       name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
       createdAt
     }
   }
@@ -181,6 +211,12 @@ export const LoginDocument = gql`
       id
       email
       name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
       createdAt
     }
   }
@@ -220,6 +256,12 @@ export const RefreshDocument = gql`
       id
       email
       name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
       createdAt
     }
   }

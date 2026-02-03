@@ -10,5 +10,6 @@ export const resolvers = {
     login: authResolvers.login,
     refresh: authResolvers.refresh,
     logout: authResolvers.logout,
+    updateProfile: authResolvers.updateProfile,
   },
 };

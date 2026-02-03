@@ -6,11 +6,28 @@ import { ACCESS_SECRET, REFRESH_SECRET, ACCESS_TTL, REFRESH_TTL } from "../confi
 import type { AuthUser, JwtPayload } from "./types.js";
 import { cookieOptions, getTtlMs, signAccessToken, signRefreshToken } from "./tokens.js";
 
-export function toAuthUser(user: { id: string; email: string; name: string | null; createdAt: Date }) {
+export function toAuthUser(user: {
+  id: string;
+  email: string;
+  name: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  middleName: string | null;
+  description: string | null;
+  photoUrl: string | null;
+  birthDate: Date | null;
+  createdAt: Date;
+}) {
   return {
     id: user.id,
     email: user.email,
     name: user.name,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    middleName: user.middleName,
+    description: user.description,
+    photoUrl: user.photoUrl,
+    birthDate: user.birthDate ? user.birthDate.toISOString() : null,
     createdAt: user.createdAt.toISOString(),
   } satisfies AuthUser;
 }

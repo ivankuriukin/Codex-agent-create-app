@@ -1,23 +1,22 @@
 import { ApolloProvider } from "@app/providers/ApolloProvider";
 import { AuthProvider } from "@app/providers/AuthProvider";
 import { RouterProvider } from "@app/providers/RouterProvider";
-import { ConfigProvider, theme } from "antd";
+import { App as AntApp, ConfigProvider } from "antd";
+import { StyleProvider } from "antd-style";
+import { appTheme } from "@shared/theme/tokens";
 
 export function AppProviders() {
   return (
-    <ConfigProvider
-      theme={{
-        algorithm: theme.darkAlgorithm,
-        token: {
-          colorPrimary: "#1f6feb",
-        },
-      }}
-    >
-      <ApolloProvider>
-        <AuthProvider>
-          <RouterProvider />
-        </AuthProvider>
-      </ApolloProvider>
-    </ConfigProvider>
+    <StyleProvider>
+      <ConfigProvider theme={appTheme}>
+        <AntApp>
+          <ApolloProvider>
+            <AuthProvider>
+              <RouterProvider />
+            </AuthProvider>
+          </ApolloProvider>
+        </AntApp>
+      </ConfigProvider>
+    </StyleProvider>
   );
 }

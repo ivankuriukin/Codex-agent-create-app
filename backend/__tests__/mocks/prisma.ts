@@ -1,9 +1,15 @@
 import { jest } from "@jest/globals";
 
-type User = {
+export type User = {
   id: string;
   email: string;
   name: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  middleName: string | null;
+  description: string | null;
+  photoUrl: string | null;
+  birthDate: Date | null;
   passwordHash: string;
   refreshTokenHash: string | null;
   createdAt: Date;
@@ -12,7 +18,7 @@ type User = {
 
 type FindUniqueArgs = { where: { id?: string; email?: string } };
 type CreateArgs = { data: { email: string; name?: string | null; passwordHash: string } };
-type UpdateArgs = { where: { id: string }; data: Partial<Pick<User, "refreshTokenHash">> };
+type UpdateArgs = { where: { id: string }; data: Partial<User> };
 
 let userIdCounter = 1;
 export const users = new Map<string, User>();
@@ -37,6 +43,12 @@ export const prismaMock = {
         id,
         email: data.email,
         name: data.name ?? null,
+        firstName: null,
+        lastName: null,
+        middleName: null,
+        description: null,
+        photoUrl: null,
+        birthDate: null,
         passwordHash: data.passwordHash,
         refreshTokenHash: null,
         createdAt: now,
