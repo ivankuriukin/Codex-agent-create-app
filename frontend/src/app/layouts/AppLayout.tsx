@@ -3,8 +3,8 @@ import { Layout, Button, Typography, Tooltip, Flex, Avatar, Drawer, Grid } from 
 import { MenuOutlined, UserOutlined } from "@ant-design/icons";
 import { SidebarNav } from "@app/layouts/SidebarNav";
 import { useAppLayoutStyles } from "@app/layouts/app-layout.styles";
-import { AuthSwitch } from "@entities/auth";
-import { useState } from "react";
+import { AuthSwitch, useAuthStore } from "@entities/auth";
+import { useEffect, useRef, useState } from "react";
 
 const { Header, Sider, Content, Footer } = Layout;
 const { useBreakpoint } = Grid;
@@ -15,10 +15,29 @@ export function AppLayout() {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const authStore = useAuthStore();
+  const wasAuthenticated = useRef(false);
   const location = useRouterState({
     select: (state) => state.location,
   });
   const pathname = location.pathname;
+  const searchValue =
+    typeof location.search === "string"
+      ? location.search
+      : new URLSearchParams(location.search as Record<string, string>).toString();
+  const redirectPath = `${pathname}${searchValue ? `?${searchValue}` : ""}`;
+
+  useEffect(() => {
+    if (!authStore.isAuthResolved) {
+      return;
+    }
+
+    if (wasAuthenticated.current && !authStore.isAuthenticated && pathname !== "/auth") {
+      navigate({ to: "/auth", search: { redirect: redirectPath } });
+    }
+
+    wasAuthenticated.current = authStore.isAuthenticated;
+  }, [authStore.isAuthResolved, authStore.isAuthenticated, navigate, pathname, redirectPath]);
 
   return (
     <Layout className={styles.root}>
@@ -53,7 +72,7 @@ export function AppLayout() {
                     <Button
                       type="primary"
                       icon={<UserOutlined />}
-                      onClick={() => navigate({ to: "/auth", search: { redirect: "/profile" } })}
+                      onClick={() => navigate({ to: "/auth", search: { redirect: redirectPath } })}
                     >
                       Sign in
                     </Button>
@@ -121,7 +140,7 @@ export function AppLayout() {
                 icon={<UserOutlined />}
                 onClick={() => {
                   setIsDrawerOpen(false);
-                  navigate({ to: "/auth", search: { redirect: pathname } });
+                  navigate({ to: "/auth", search: { redirect: redirectPath } });
                 }}
               >
                 Sign in
