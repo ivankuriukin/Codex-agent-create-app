@@ -1,5 +1,4 @@
-#graphql
-  type User {
+type User {
     id: ID!
     email: String!
     name: String

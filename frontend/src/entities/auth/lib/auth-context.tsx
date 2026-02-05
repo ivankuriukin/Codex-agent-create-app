@@ -17,17 +17,8 @@ export type AuthContextValue = {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isAuthResolved: boolean;
+  setUser: (user: AuthUser | null) => void;
   login: (payload: { email: string; password: string }) => Promise<void>;
-  register: (payload: { email: string; password: string; name?: string }) => Promise<void>;
-  updateProfile: (payload: {
-    firstName?: string;
-    lastName?: string;
-    middleName?: string;
-    description?: string;
-    birthDate?: string | null;
-    photoFile?: File | null;
-  }) => Promise<void>;
-  deleteProfilePhoto: () => Promise<void>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
 };

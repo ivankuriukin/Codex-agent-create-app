@@ -14,16 +14,20 @@ import {
   Tooltip,
 } from "antd";
 import { useAuthStore } from "@entities/auth";
-import { DeleteOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
+import { CheckOutlined, DeleteOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { apiBaseUrl } from "@config/env";
 import { useEffect, useMemo, useState } from "react";
 import dayjs, { type Dayjs } from "dayjs";
 import { useProfileStyles } from "@pages/profile/profile.styles";
+import { TelegramLoginButton } from "@shared/ui/TelegramLoginButton";
+import { useProfileStore } from "@pages/profile/model/useProfileStore";
 
 export function ProfilePage() {
   const authStore = useAuthStore();
+  const profileStore = useProfileStore();
   const [form] = Form.useForm();
   const [isDirty, setIsDirty] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "success">("idle");
   const { styles } = useProfileStyles();
 
   const birthDateValue = useMemo(() => {
@@ -56,11 +60,11 @@ export function ProfilePage() {
 
   const handlePhotoUpload = async (file?: File) => {
     if (!file) return;
-    await authStore.updateProfile({ photoFile: file });
+    await profileStore.uploadPhoto(file);
   };
 
   const handleDeletePhoto = async () => {
-    await authStore.deleteProfilePhoto();
+    await profileStore.deletePhoto();
   };
 
   const handleSave = async (values: {
@@ -70,7 +74,7 @@ export function ProfilePage() {
     description?: string;
     birthDate?: Dayjs | null;
   }) => {
-    await authStore.updateProfile({
+    await profileStore.saveProfile({
       firstName: values.firstName,
       lastName: values.lastName,
       middleName: values.middleName,
@@ -78,6 +82,8 @@ export function ProfilePage() {
       birthDate: values.birthDate ? values.birthDate.toISOString() : null,
     });
     setIsDirty(false);
+    setSaveStatus("success");
+    setTimeout(() => setSaveStatus("idle"), 300);
   };
 
   return (
@@ -154,12 +160,35 @@ export function ProfilePage() {
                 <Input.TextArea rows={4} placeholder="Tell about yourself" />
               </Form.Item>
               <div className={styles.actionsRow}>
-                <Button type="primary" htmlType="submit" disabled={!isDirty}>
-                  Save
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={!isDirty}
+                  icon={saveStatus === "success" ? <CheckOutlined /> : undefined}
+                >
+                  {saveStatus === "success" ? "Saved" : "Save"}
                 </Button>
               </div>
             </Form>
           </Card>
+          <Card title="Telegram">
+            <Flex vertical gap="small">
+              <Typography.Text type="secondary">
+                Link your Telegram account to enable quick sign-in.
+              </Typography.Text>
+              <TelegramLoginButton redirectPath="/profile" />
+            </Flex>
+          </Card>
+          <Flex justify="end">
+            <Button
+              danger
+              onClick={async () => {
+                await authStore.logout();
+              }}
+            >
+              Logout
+            </Button>
+          </Flex>
         </Col>
       </Row>
     </div>

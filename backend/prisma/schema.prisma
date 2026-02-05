@@ -16,6 +16,10 @@ model User {
   middleName       String?
   description      String?
   photoUrl         String?
+  telegramId       String?  @unique
+  telegramUsername String?
+  telegramPhotoUrl String?
+  telegramAuthDate DateTime?
   birthDate        DateTime?
   passwordHash     String
   refreshTokenHash String?

@@ -12,6 +12,11 @@ export const useAppLayoutStyles = createStyles(({ token }) => ({
   header: {
     padding: token.padding,
   },
+  headerActions: {
+    display: "flex",
+    alignItems: "center",
+    gap: token.marginSM,
+  },
   sider: {
     padding: token.padding,
     margin: token.padding,
@@ -38,5 +43,16 @@ export const useAppLayoutStyles = createStyles(({ token }) => ({
   },
   footer: {
     padding: token.padding,
+  },
+  drawerBody: {
+    padding: token.padding,
+    display: "flex",
+    flexDirection: "column",
+    gap: token.marginSM,
+  },
+  drawer: {
+    "& .ant-drawer-body": {
+      padding: 0,
+    },
   },
 }));

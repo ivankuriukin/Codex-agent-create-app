@@ -22,6 +22,7 @@ services:
       ACCESS_TOKEN_TTL: 15m
       REFRESH_TOKEN_TTL: 7d
       NODE_ENV: development
+      TELEGRAM_BOT_TOKEN: change_me_telegram
     volumes:
       - ./backend:/app
     depends_on:
@@ -35,6 +36,8 @@ services:
     working_dir: /app
     environment:
       VITE_API_URL: http://localhost:4000
+      VITE_TELEGRAM_BOT_NAME: change_me_bot
+      VITE_TELEGRAM_BOT_ID: "1"
     volumes:
       - ./frontend:/app
     depends_on:

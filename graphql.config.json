@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "backend": {
+      "schema": ["backend/schema.graphql"],
+      "documents": ["backend/src/**/*.graphql"]
+    },
+    "frontend": {
+      "schema": ["frontend/src/shared/api/schema.graphql"],
+      "documents": ["frontend/src/**/*.graphql"]
+    }
+  }
+}

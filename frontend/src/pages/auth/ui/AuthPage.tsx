@@ -1,15 +1,22 @@
-import { Button, Card, Typography, Flex, Form, Input } from "antd";
+import { Button, Card, Typography, Flex, Form, Input, App } from "antd";
 import { useAuthStore } from "@entities/auth";
 import { useAuthStyles } from "@pages/auth/auth.styles";
 import { Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
+import { TelegramLoginButton } from "@shared/ui/TelegramLoginButton";
+import { telegramBotId } from "@config/env";
 
 export function AuthPage() {
   const authStore = useAuthStore();
   const { styles } = useAuthStyles();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const { message } = App.useApp();
   const location = useRouterState({ select: (state) => state.location });
-  const searchParams = new URLSearchParams(location.search);
+  const searchValue =
+    typeof location.search === "string"
+      ? location.search
+      : new URLSearchParams(location.search as Record<string, string>).toString();
+  const searchParams = new URLSearchParams(searchValue);
   const redirectParam = searchParams.get("redirect");
   const redirectTarget = redirectParam || "/";
 
@@ -24,8 +31,12 @@ export function AuthPage() {
           form={form}
           layout="vertical"
           onFinish={async (values) => {
-            await authStore.login(values);
-            navigate({ to: redirectTarget });
+            try {
+              await authStore.login(values);
+              navigate({ to: redirectTarget });
+            } catch {
+              message.error("Invalid credentials.");
+            }
           }}
           requiredMark="optional"
         >
@@ -65,6 +76,12 @@ export function AuthPage() {
             Logged in as: {authStore.user.email}
           </Typography.Paragraph>
         )}
+        {telegramBotId ? (
+          <Flex vertical gap="small">
+            <Typography.Text type="secondary">Or sign in with Telegram</Typography.Text>
+            <TelegramLoginButton redirectPath={redirectTarget} />
+          </Flex>
+        ) : null}
       </Card>
     </Flex>
   );

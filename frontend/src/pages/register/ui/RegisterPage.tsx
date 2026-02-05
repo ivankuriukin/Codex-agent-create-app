@@ -2,14 +2,20 @@ import { Button, Card, Flex, Form, Input, Typography } from "antd";
 import { useAuthStore } from "@entities/auth";
 import { useAuthStyles } from "@pages/auth/auth.styles";
 import { Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useRegisterStore } from "@pages/register/model/useRegisterStore";
 
 export function RegisterPage() {
   const authStore = useAuthStore();
   const { styles } = useAuthStyles();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const registerStore = useRegisterStore();
   const location = useRouterState({ select: (state) => state.location });
-  const searchParams = new URLSearchParams(location.search);
+  const searchValue =
+    typeof location.search === "string"
+      ? location.search
+      : new URLSearchParams(location.search as Record<string, string>).toString();
+  const searchParams = new URLSearchParams(searchValue);
   const redirectParam = searchParams.get("redirect");
   const redirectTarget = redirectParam || "/";
 
@@ -24,7 +30,7 @@ export function RegisterPage() {
           form={form}
           layout="vertical"
           onFinish={async (values) => {
-            await authStore.register(values);
+            await registerStore.register(values);
             navigate({ to: redirectTarget });
           }}
           requiredMark="optional"
