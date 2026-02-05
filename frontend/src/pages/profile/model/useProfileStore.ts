@@ -1,6 +1,10 @@
 import { useCallback } from "react";
-import { apiBaseUrl } from "@config/env";
-import { useAuthStore, type AuthUser } from "@entities/auth";
+import { useAuthStore } from "@entities/auth";
+import {
+  useDeleteProfilePhotoMutation,
+  useUpdateProfileMutation,
+  useUploadProfilePhotoMutation,
+} from "@shared/api/graphql";
 
 type ProfilePayload = {
   firstName?: string;
@@ -12,60 +16,74 @@ type ProfilePayload = {
 
 export function useProfileStore() {
   const { setUser } = useAuthStore();
+  const [updateProfileMutation] = useUpdateProfileMutation();
+  const [uploadProfilePhotoMutation] = useUploadProfilePhotoMutation();
+  const [deleteProfilePhotoMutation] = useDeleteProfilePhotoMutation();
+
+  const readFileAsBase64 = useCallback((file: File) => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result !== "string") {
+          reject(new Error("Failed to read file"));
+          return;
+        }
+        resolve(reader.result);
+      };
+      reader.onerror = () => {
+        reject(new Error("Failed to read file"));
+      };
+      reader.readAsDataURL(file);
+    });
+  }, []);
 
   const saveProfile = useCallback(
     async (payload: ProfilePayload) => {
-      const response = await fetch(`${apiBaseUrl}/profile`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
+      const result = await updateProfileMutation({
+        variables: { input: payload },
+        fetchPolicy: "no-cache",
       });
 
-      if (!response.ok) {
+      const nextUser = result.data?.updateProfile?.user ?? null;
+      if (!nextUser) {
         throw new Error("Profile update failed");
       }
 
-      const data = (await response.json()) as { user: AuthUser };
-      setUser(data.user);
+      setUser(nextUser);
     },
-    [setUser]
+    [setUser, updateProfileMutation]
   );
 
   const uploadPhoto = useCallback(
     async (photoFile: File) => {
-      const formData = new FormData();
-      formData.append("photo", photoFile);
-
-      const response = await fetch(`${apiBaseUrl}/profile/photo`, {
-        method: "POST",
-        credentials: "include",
-        body: formData,
+      const base64 = await readFileAsBase64(photoFile);
+      const result = await uploadProfilePhotoMutation({
+        variables: { input: { fileName: photoFile.name, base64 } },
+        fetchPolicy: "no-cache",
       });
 
-      if (!response.ok) {
+      const nextUser = result.data?.uploadProfilePhoto?.user ?? null;
+      if (!nextUser) {
         throw new Error("Photo upload failed");
       }
 
-      const data = (await response.json()) as { user: AuthUser };
-      setUser(data.user);
+      setUser(nextUser);
     },
-    [setUser]
+    [readFileAsBase64, setUser, uploadProfilePhotoMutation]
   );
 
   const deletePhoto = useCallback(async () => {
-    const response = await fetch(`${apiBaseUrl}/profile/photo`, {
-      method: "DELETE",
-      credentials: "include",
+    const result = await deleteProfilePhotoMutation({
+      fetchPolicy: "no-cache",
     });
 
-    if (!response.ok) {
+    const nextUser = result.data?.deleteProfilePhoto?.user ?? null;
+    if (!nextUser) {
       throw new Error("Photo delete failed");
     }
 
-    const data = (await response.json()) as { user: AuthUser };
-    setUser(data.user);
-  }, [setUser]);
+    setUser(nextUser);
+  }, [deleteProfilePhotoMutation, setUser]);
 
   return { saveProfile, uploadPhoto, deletePhoto };
 }

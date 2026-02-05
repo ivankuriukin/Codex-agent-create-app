@@ -4,6 +4,16 @@ import { render, waitFor } from "@testing-library/react";
 import { AuthStoreContext, type AuthContextValue } from "@entities/auth";
 import { useProfileStore } from "@pages/profile/model/useProfileStore";
 
+const mockUpdateProfileMutation = jest.fn();
+const mockUploadProfilePhotoMutation = jest.fn();
+const mockDeleteProfilePhotoMutation = jest.fn();
+
+jest.mock("@shared/api/graphql", () => ({
+  useUpdateProfileMutation: () => [mockUpdateProfileMutation],
+  useUploadProfilePhotoMutation: () => [mockUploadProfilePhotoMutation],
+  useDeleteProfilePhotoMutation: () => [mockDeleteProfilePhotoMutation],
+}));
+
 function ProfileProbe({
   action,
 }: {
@@ -12,15 +22,19 @@ function ProfileProbe({
   const { saveProfile, uploadPhoto, deletePhoto } = useProfileStore();
 
   useEffect(() => {
-    if (action === "save") {
-      saveProfile({ firstName: "Ivan" });
-    }
-    if (action === "upload") {
-      uploadPhoto(new File(["x"], "photo.png", { type: "image/png" }));
-    }
-    if (action === "delete") {
-      deletePhoto();
-    }
+    const run = async () => {
+      if (action === "save") {
+        await saveProfile({ firstName: "Ivan" });
+      }
+      if (action === "upload") {
+        await uploadPhoto(new File(["x"], "photo.png", { type: "image/png" }));
+      }
+      if (action === "delete") {
+        await deletePhoto();
+      }
+    };
+
+    run().catch(() => undefined);
   }, [action, saveProfile, uploadPhoto, deletePhoto]);
 
   return null;
@@ -40,10 +54,19 @@ describe("useProfileStore", () => {
 
   beforeEach(() => {
     setUser.mockClear();
-    globalThis.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ user: { id: "1", email: "demo@demo.com", createdAt: "now" } }),
-    }) as jest.Mock;
+    mockUpdateProfileMutation.mockResolvedValue({
+      data: { updateProfile: { user: { id: "1", email: "demo@demo.com", createdAt: "now" } } },
+    });
+    mockUploadProfilePhotoMutation.mockResolvedValue({
+      data: {
+        uploadProfilePhoto: { user: { id: "1", email: "demo@demo.com", createdAt: "now" } },
+      },
+    });
+    mockDeleteProfilePhotoMutation.mockResolvedValue({
+      data: {
+        deleteProfilePhoto: { user: { id: "1", email: "demo@demo.com", createdAt: "now" } },
+      },
+    });
   });
 
   test("saveProfile posts profile and updates user", async () => {
@@ -54,9 +77,10 @@ describe("useProfileStore", () => {
     );
 
     await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("/profile"),
-        expect.objectContaining({ method: "POST" })
+      expect(mockUpdateProfileMutation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: { input: { firstName: "Ivan" } },
+        })
       );
       expect(setUser).toHaveBeenCalled();
     });
@@ -70,9 +94,12 @@ describe("useProfileStore", () => {
     );
 
     await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("/profile/photo"),
-        expect.objectContaining({ method: "POST" })
+      expect(mockUploadProfilePhotoMutation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            input: expect.objectContaining({ fileName: "photo.png", base64: expect.any(String) }),
+          },
+        })
       );
       expect(setUser).toHaveBeenCalled();
     });
@@ -86,11 +113,9 @@ describe("useProfileStore", () => {
     );
 
     await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("/profile/photo"),
-        expect.objectContaining({ method: "DELETE" })
-      );
+      expect(mockDeleteProfilePhotoMutation).toHaveBeenCalled();
       expect(setUser).toHaveBeenCalled();
     });
   });
+
 });

@@ -21,8 +21,12 @@ export const typeDefs = `
     lastName: String
     middleName: String
     description: String
-    photoUrl: String
     birthDate: String
+  }
+
+  input UploadProfilePhotoInput {
+    fileName: String!
+    base64: String!
   }
 
   type Query {
@@ -35,5 +39,7 @@ export const typeDefs = `
     refresh: AuthPayload!
     logout: Boolean!
     updateProfile(input: UpdateProfileInput!): AuthPayload!
+    uploadProfilePhoto(input: UploadProfilePhotoInput!): AuthPayload!
+    deleteProfilePhoto: AuthPayload!
   }
 `;

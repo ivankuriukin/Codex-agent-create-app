@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
 import { prisma } from "../db/prisma.js";
 import {
   issueTokens,
@@ -104,9 +106,61 @@ export const authResolvers = {
         lastName: args.input.lastName ?? null,
         middleName: args.input.middleName ?? null,
         description: args.input.description ?? null,
-        photoUrl: args.input.photoUrl ?? null,
         birthDate: args.input.birthDate ? new Date(args.input.birthDate) : null,
       },
+    });
+
+    return { user: toAuthUser(updated) };
+  },
+  uploadProfilePhoto: async (
+    _: unknown,
+    args: {
+      input: {
+        fileName: string;
+        base64: string;
+      };
+    },
+    context: { user: { id: string } | null }
+  ) => {
+    if (!context.user) {
+      throw new Error("Unauthorized");
+    }
+
+    const uploadDir = path.join(process.cwd(), "uploads");
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const ext = path.extname(args.input.fileName);
+    const baseName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const fileName = `${baseName}${ext}`;
+    const filePath = path.join(uploadDir, fileName);
+    const base64Data = args.input.base64.includes(",")
+      ? args.input.base64.split(",")[1]!
+      : args.input.base64;
+
+    await fs.promises.writeFile(filePath, Buffer.from(base64Data, "base64"));
+
+    const photoUrl = `/uploads/${fileName}`;
+    const updated = await prisma.user.update({
+      where: { id: context.user.id },
+      data: { photoUrl },
+    });
+
+    return { user: toAuthUser(updated) };
+  },
+  deleteProfilePhoto: async (
+    _: unknown,
+    __: unknown,
+    context: { user: { id: string } | null }
+  ) => {
+    if (!context.user) {
+      throw new Error("Unauthorized");
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: context.user.id },
+      data: { photoUrl: null },
     });
 
     return { user: toAuthUser(updated) };

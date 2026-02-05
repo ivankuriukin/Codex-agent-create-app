@@ -11,5 +11,7 @@ export const resolvers = {
     refresh: authResolvers.refresh,
     logout: authResolvers.logout,
     updateProfile: authResolvers.updateProfile,
+    uploadProfilePhoto: authResolvers.uploadProfilePhoto,
+    deleteProfilePhoto: authResolvers.deleteProfilePhoto,
   },
 };

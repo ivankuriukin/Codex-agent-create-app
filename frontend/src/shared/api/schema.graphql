@@ -1,5 +1,4 @@
-#graphql
-  type User {
+type User {
     id: ID!
     email: String!
     name: String
@@ -21,8 +20,12 @@
     lastName: String
     middleName: String
     description: String
-    photoUrl: String
     birthDate: String
+  }
+
+  input UploadProfilePhotoInput {
+    fileName: String!
+    base64: String!
   }
 
   type Query {
@@ -35,4 +38,6 @@
     refresh: AuthPayload!
     logout: Boolean!
     updateProfile(input: UpdateProfileInput!): AuthPayload!
+    uploadProfilePhoto(input: UploadProfilePhotoInput!): AuthPayload!
+    deleteProfilePhoto: AuthPayload!
   }

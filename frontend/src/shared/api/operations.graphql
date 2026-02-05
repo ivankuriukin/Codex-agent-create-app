@@ -67,3 +67,54 @@ mutation Refresh {
 mutation Logout {
   logout
 }
+
+mutation UpdateProfile($input: UpdateProfileInput!) {
+  updateProfile(input: $input) {
+    user {
+      id
+      email
+      name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
+      createdAt
+    }
+  }
+}
+
+mutation UploadProfilePhoto($input: UploadProfilePhotoInput!) {
+  uploadProfilePhoto(input: $input) {
+    user {
+      id
+      email
+      name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
+      createdAt
+    }
+  }
+}
+
+mutation DeleteProfilePhoto {
+  deleteProfilePhoto {
+    user {
+      id
+      email
+      name
+      firstName
+      lastName
+      middleName
+      description
+      photoUrl
+      birthDate
+      createdAt
+    }
+  }
+}

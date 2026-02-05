@@ -30,7 +30,7 @@ export async function startServer() {
     })
   );
   app.use(cookieParser());
-  app.use(express.json());
+  app.use(express.json({ limit: "10mb" }));
   app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
   const uploadDir = path.join(process.cwd(), "uploads");

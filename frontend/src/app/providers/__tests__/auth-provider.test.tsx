@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/jest-globals";
 import { describe, expect, test, jest } from "@jest/globals";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { AuthProvider } from "@app/providers/AuthProvider";
 import { useAuthStore, type AuthUser } from "@entities/auth";
 import type {
@@ -8,6 +8,7 @@ import type {
   RefreshMutationFn,
   LogoutMutationFn,
 } from "@shared/api/graphql";
+import { AUTH_UNAUTHORIZED_EVENT } from "@shared/lib/auth-events";
 
 const mockLogin = jest.fn() as jest.MockedFunction<LoginMutationFn>;
 const mockRefresh = jest.fn() as jest.MockedFunction<RefreshMutationFn>;
@@ -87,6 +88,36 @@ describe("AuthProvider", () => {
     await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("yes"));
 
     fireEvent.click(screen.getByText("logout"));
+    await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("no"));
+  });
+
+  test("unauthorized event clears user state", async () => {
+    const user: AuthUser = {
+      id: "1",
+      email: "demo@demo.com",
+      name: null,
+      createdAt: new Date().toISOString(),
+    };
+    const loginResult: Awaited<ReturnType<LoginMutationFn>> = {
+      data: {
+        login: { user },
+      },
+    };
+    mockLogin.mockResolvedValueOnce(loginResult);
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    fireEvent.click(screen.getByText("login"));
+    await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("yes"));
+
+    act(() => {
+      window.dispatchEvent(new CustomEvent(AUTH_UNAUTHORIZED_EVENT));
+    });
+
     await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("no"));
   });
 });

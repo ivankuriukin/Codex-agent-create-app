@@ -6,6 +6,7 @@ import {
   useMeQuery,
   useRefreshMutation,
 } from "@shared/api/graphql";
+import { AUTH_UNAUTHORIZED_EVENT } from "@shared/lib/auth-events";
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -66,6 +67,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsAuthResolved(true);
     }
   }, [meLoading]);
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setUser(null);
+    };
+
+    if (typeof window === "undefined") return;
+    window.addEventListener(AUTH_UNAUTHORIZED_EVENT, handleUnauthorized);
+    return () => {
+      window.removeEventListener(AUTH_UNAUTHORIZED_EVENT, handleUnauthorized);
+    };
+  }, []);
 
   const value: AuthContextValue = useMemo(
     () => ({
