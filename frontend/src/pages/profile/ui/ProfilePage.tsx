@@ -21,14 +21,22 @@ import dayjs, { type Dayjs } from "dayjs";
 import { useProfileStyles } from "@pages/profile/profile.styles";
 import { TelegramLoginButton } from "@shared/ui/TelegramLoginButton";
 import { useProfileStore } from "@pages/profile/model/useProfileStore";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 
 export function ProfilePage() {
   const authStore = useAuthStore();
   const profileStore = useProfileStore();
+  const navigate = useNavigate();
+  const location = useRouterState({ select: (state) => state.location });
   const [form] = Form.useForm();
   const [isDirty, setIsDirty] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "success">("idle");
   const { styles } = useProfileStyles();
+  const searchValue =
+    typeof location.search === "string"
+      ? location.search
+      : new URLSearchParams(location.search as Record<string, string>).toString();
+  const redirectPath = `${location.pathname}${searchValue ? `?${searchValue}` : ""}`;
 
   const birthDateValue = useMemo(() => {
     if (!authStore.user?.birthDate) return null;
@@ -184,6 +192,7 @@ export function ProfilePage() {
               danger
               onClick={async () => {
                 await authStore.logout();
+                navigate({ to: "/auth", search: { redirect: redirectPath } });
               }}
             >
               Logout
