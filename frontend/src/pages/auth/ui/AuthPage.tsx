@@ -25,7 +25,7 @@ export function AuthPage() {
   }
 
   return (
-    <Flex className={styles.center} align="center" justify="center">
+    <Flex align="center" justify="center" className={styles.center}>
       <Card title="Login" className={styles.card}>
         <Form
           form={form}

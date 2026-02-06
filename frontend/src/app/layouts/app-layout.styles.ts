@@ -23,6 +23,12 @@ export const useAppLayoutStyles = createStyles(({ token }) => ({
     borderRadius: token.borderRadiusLG,
     overflow: "hidden",
   },
+  siderContent: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
   nav: {
     background: "transparent",
     borderInlineEnd: 0,
@@ -37,9 +43,19 @@ export const useAppLayoutStyles = createStyles(({ token }) => ({
       borderInlineEnd: 0,
     },
   },
+  authMenu: {
+    background: "transparent",
+    borderInlineEnd: 0,
+    "&.ant-menu-inline": {
+      borderInlineEnd: 0,
+    },
+  },
   content: {
     padding: token.padding,
     overflow: "auto",
+  },
+  contentInner: {
+    minHeight: "100%",
   },
   footer: {
     padding: token.padding,

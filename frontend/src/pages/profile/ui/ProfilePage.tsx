@@ -4,6 +4,7 @@ import { useProfileStyles } from '@pages/profile/profile.styles';
 import { TelegramLoginButton } from '@shared/ui/TelegramLoginButton';
 import { ProfilePhotoCard } from '@pages/profile/ui/ProfilePhotoCard';
 import { ProfileDetailsForm } from '@pages/profile/ui/ProfileDetailsForm';
+import { WizardSpriteComposer } from '@shared/ui/WizardSpriteComposer';
 
 export function ProfilePage() {
   const authStore = useAuthStore();
@@ -24,6 +25,9 @@ export function ProfilePage() {
         <Col xs={24} lg={16}>
           <Space size="middle" vertical>
             <ProfileDetailsForm user={user} />
+            <Card title="Wizard sprite">
+              <WizardSpriteComposer />
+            </Card>
             <Card title="Telegram">
               <Flex vertical gap="small">
                 <Typography.Text type="secondary">

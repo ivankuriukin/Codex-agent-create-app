@@ -1,7 +1,7 @@
 import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Layout, Button, Typography, Tooltip, Flex, Avatar, Drawer, Grid } from "antd";
+import { Layout, Button, Typography, Flex, Avatar, Drawer, Grid } from "antd";
 import { MenuOutlined, UserOutlined } from "@ant-design/icons";
-import { SidebarNav } from "@app/layouts/SidebarNav";
+import { SidebarAuthMenu, SidebarNav } from "@app/layouts/SidebarNav";
 import { useAppLayoutStyles } from "@app/layouts/app-layout.styles";
 import { AuthSwitch, useAuthStore } from "@entities/auth";
 import { useEffect, useRef, useState } from "react";
@@ -54,32 +54,7 @@ export function AppLayout() {
                 icon={<MenuOutlined />}
                 onClick={() => setIsDrawerOpen(true)}
               />
-            ) : (
-              <AuthSwitch
-                authenticated={
-                  <Tooltip title="Profile">
-                    <Button
-                      type="text"
-                      icon={<UserOutlined />}
-                      onClick={() => navigate({ to: "/profile" })}
-                    >
-                      Profile
-                    </Button>
-                  </Tooltip>
-                }
-                unauthenticated={
-                  <Tooltip title="Sign in">
-                    <Button
-                      type="primary"
-                      icon={<UserOutlined />}
-                      onClick={() => navigate({ to: "/auth", search: { redirect: redirectPath } })}
-                    >
-                      Sign in
-                    </Button>
-                  </Tooltip>
-                }
-              />
-            )}
+            ) : null}
           </div>
         </Flex>
       </Header>
@@ -87,12 +62,25 @@ export function AppLayout() {
       <Layout className={styles.main}>
         {!isMobile && (
           <Sider width={240} className={styles.sider}>
-            <SidebarNav pathname={pathname} onNavigate={(to) => navigate({ to })} />
+            <Flex vertical className={styles.siderContent}>
+              <SidebarNav pathname={pathname} onNavigate={(to) => navigate({ to })} />
+              <SidebarAuthMenu
+                pathname={pathname}
+                isAuthenticated={authStore.isAuthenticated}
+                onNavigate={(to) => {
+                  if (to === "/auth") {
+                    navigate({ to, search: { redirect: redirectPath } });
+                    return;
+                  }
+                  navigate({ to });
+                }}
+              />
+            </Flex>
           </Sider>
         )}
 
         <Content className={styles.content}>
-          <Flex vertical gap="large">
+          <Flex vertical gap="large" className={styles.contentInner}>
             <Outlet />
           </Flex>
         </Content>
