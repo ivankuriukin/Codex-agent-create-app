@@ -16,14 +16,14 @@
     "@apollo/client": "3.11.8",
     "@tanstack/react-router": "1.0.0",
     "antd": "6.0.0",
-    "antd-style": "^4.1.0",
+    "antd-style": "4.1.0",
     "dayjs": "1.11.11",
     "graphql": "16.9.0",
-    "konva": "^10.2.0",
+    "konva": "10.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-konva": "^19.2.2",
-    "react-use": "^17.6.0"
+    "react-konva": "19.2.2",
+    "react-use": "17.6.0"
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",
