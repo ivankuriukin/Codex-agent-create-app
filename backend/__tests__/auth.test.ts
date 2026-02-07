@@ -3,7 +3,8 @@ import type { Request, Response } from "express";
 import { authResolvers } from "../src/auth/resolvers.js";
 import { issueTokens, verifyRefreshToken } from "../src/auth/service.js";
 import { signAccessToken, signRefreshToken } from "../src/auth/tokens.js";
-import { prismaMock, users, resetPrismaMock, type User } from "./mocks/prisma";
+import { prismaMock, resetPrismaMock } from "./mocks/prisma";
+import { redisClient, resetRedisMock } from "./mocks/redis";
 
 type CookieResponse = {
   cookie: jest.Mock;
@@ -32,6 +33,7 @@ function asClearCookieResponse(res: ClearCookieResponse) {
 describe("auth", () => {
   beforeEach(() => {
     resetPrismaMock();
+    resetRedisMock();
   });
 
   test("issueTokens hashes and stores refresh token", async () => {
@@ -41,11 +43,10 @@ describe("auth", () => {
     });
 
     const { refreshToken } = await issueTokens(user.id);
-    const stored = users.get(user.id) as User | undefined;
+    const stored = await redisClient.get(`auth:refresh:${user.id}`);
 
     expect(stored).toBeDefined();
-    expect(stored?.refreshTokenHash).toBeTruthy();
-    const matches = await bcrypt.compare(refreshToken, stored!.refreshTokenHash as string);
+    const matches = await bcrypt.compare(refreshToken, stored as string);
     expect(matches).toBe(true);
   });
 
@@ -95,7 +96,7 @@ describe("auth", () => {
 
     const refreshToken = signRefreshToken(user.id);
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-    await prismaMock.user.update({ where: { id: user.id }, data: { refreshTokenHash } });
+    await redisClient.set(`auth:refresh:${user.id}`, refreshTokenHash);
 
     const req: AuthRequest = { cookies: { refresh_token: refreshToken } };
     const res: CookieResponse = { cookie: jest.fn() };
@@ -122,11 +123,10 @@ describe("auth", () => {
       req: asRequest(req),
       res: asClearCookieResponse(res),
     });
-    const updated = users.get(user.id) as User | undefined;
+    const stored = await redisClient.get(`auth:refresh:${user.id}`);
 
     expect(result).toBe(true);
-    expect(updated).toBeDefined();
-    expect(updated!.refreshTokenHash).toBeNull();
+    expect(stored).toBeNull();
     expect(res.clearCookie).toHaveBeenCalledWith("access_token", { path: "/" });
     expect(res.clearCookie).toHaveBeenCalledWith("refresh_token", { path: "/" });
   });

@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { Request, Response } from "express";
 import { prisma } from "../db/prisma.js";
+import { redisClient } from "../db/redis.js";
 import { ACCESS_SECRET, REFRESH_SECRET, ACCESS_TTL, REFRESH_TTL } from "../config/env.js";
 import type { AuthUser, JwtPayload } from "./types.js";
 import { cookieOptions, getTtlMs, signAccessToken, signRefreshToken } from "./tokens.js";
@@ -36,11 +37,10 @@ export async function issueTokens(userId: string) {
   const accessToken = signAccessToken(userId);
   const refreshToken = signRefreshToken(userId);
   const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+  const refreshKey = `auth:refresh:${userId}`;
+  const refreshTtlMs = getRefreshCookieMaxAge();
 
-  await prisma.user.update({
-    where: { id: userId },
-    data: { refreshTokenHash },
-  });
+  await redisClient.set(refreshKey, refreshTokenHash, { PX: refreshTtlMs });
 
   return { accessToken, refreshToken };
 }
@@ -95,11 +95,17 @@ export async function verifyRefreshToken(token: string) {
   }
 
   const user = await prisma.user.findUnique({ where: { id: payload.sub } });
-  if (!user || !user.refreshTokenHash) {
+  if (!user) {
     throw new Error("Refresh token invalid.");
   }
 
-  const matches = await bcrypt.compare(token, user.refreshTokenHash);
+  const refreshKey = `auth:refresh:${user.id}`;
+  const refreshTokenHash = await redisClient.get(refreshKey);
+  if (!refreshTokenHash) {
+    throw new Error("Refresh token invalid.");
+  }
+
+  const matches = await bcrypt.compare(token, refreshTokenHash);
   if (!matches) {
     throw new Error("Refresh token invalid.");
   }

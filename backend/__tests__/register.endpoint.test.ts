@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
 import { issueTokens, setAuthCookies, toAuthUser } from "../src/auth/service.js";
 import { prismaMock, resetPrismaMock, users } from "./mocks/prisma";
+import { resetRedisMock } from "./mocks/redis";
 
 let server: Server;
 
@@ -51,6 +52,7 @@ afterAll(() => {
 
 beforeEach(() => {
   resetPrismaMock();
+  resetRedisMock();
 });
 
 test("POST /auth/register creates a user and sets cookies", async () => {

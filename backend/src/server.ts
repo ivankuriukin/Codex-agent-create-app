@@ -13,8 +13,10 @@ import { authRouter } from "./routes/auth.routes.js";
 import { profileRouter } from "./routes/profile.routes.js";
 import fs from "fs";
 import path from "path";
+import { connectRedis } from "./db/redis.js";
 
 export async function startServer() {
+  await connectRedis();
   const app = express();
 
   app.use(

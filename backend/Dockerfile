@@ -2,10 +2,10 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 COPY prisma ./prisma
 
-RUN npm install
+RUN npm ci
 RUN npm run prisma:generate
 
 COPY tsconfig.json ./

@@ -8,6 +8,7 @@ const ACCESS_TTL = process.env.ACCESS_TOKEN_TTL || "15m";
 const REFRESH_TTL = process.env.REFRESH_TOKEN_TTL || "7d";
 const IS_PROD = process.env.NODE_ENV === "production";
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 if (!ACCESS_SECRET || !REFRESH_SECRET) {
   throw new Error("JWT secrets are not set. Define JWT_ACCESS_SECRET and JWT_REFRESH_SECRET.");
@@ -22,4 +23,5 @@ export {
   REFRESH_TTL,
   IS_PROD,
   TELEGRAM_BOT_TOKEN,
+  REDIS_URL,
 };

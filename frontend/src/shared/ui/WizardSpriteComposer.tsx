@@ -131,16 +131,59 @@ const buildHead = (index: number) => {
   const skin = skinTones[index];
   const pixels: Pixel[] = [];
 
-  addRect(pixels, 9, 3, 8, 2, palette.main);
-  addRect(pixels, 8, 5, 9, 1, palette.dark);
-  addRect(pixels, 10, 1, 5, 2, palette.main);
-  addPixel(pixels, 14, 2, palette.accent);
+  const hatStyle = index % 4;
+  if (hatStyle === 0) {
+    addRect(pixels, 11, 0, 4, 1, palette.main);
+    addRect(pixels, 10, 1, 6, 2, palette.main);
+    addRect(pixels, 9, 3, 8, 2, palette.main);
+    addRect(pixels, 8, 5, 9, 1, palette.dark);
+    addPixel(pixels, 15, 1, palette.accent);
+  }
+  if (hatStyle === 1) {
+    addRect(pixels, 9, 2, 9, 3, palette.main);
+    addRect(pixels, 8, 5, 10, 1, palette.dark);
+    addRect(pixels, 10, 1, 5, 1, palette.highlight);
+    addRect(pixels, 14, 1, 3, 1, palette.accent);
+  }
+  if (hatStyle === 2) {
+    addRect(pixels, 10, 2, 6, 2, palette.main);
+    addRect(pixels, 9, 4, 7, 1, palette.main);
+    addRect(pixels, 8, 5, 9, 1, palette.dark);
+    addRect(pixels, 11, 1, 4, 1, palette.accent);
+    addPixel(pixels, 14, 2, palette.highlight);
+  }
+  if (hatStyle === 3) {
+    addRect(pixels, 9, 1, 7, 2, palette.main);
+    addRect(pixels, 8, 3, 9, 2, palette.main);
+    addRect(pixels, 7, 5, 11, 1, palette.dark);
+    addRect(pixels, 12, 2, 2, 1, palette.accent);
+    addPixel(pixels, 15, 3, palette.highlight);
+  }
 
   addRect(pixels, 10, 6, 6, 4, skin.base);
-  addRect(pixels, 12, 10, 5, 2, skin.beard);
-  addRect(pixels, 11, 11, 5, 2, skin.beard);
   addRect(pixels, 16, 7, 2, 2, skin.shadow);
   addPixel(pixels, 15, 8, skin.shadow);
+
+  const beardStyle = index % 4;
+  if (beardStyle === 0) {
+    addRect(pixels, 12, 10, 5, 2, skin.beard);
+    addRect(pixels, 11, 11, 5, 2, skin.beard);
+  }
+  if (beardStyle === 1) {
+    addRect(pixels, 11, 10, 6, 1, skin.beard);
+    addRect(pixels, 11, 11, 6, 2, skin.beard);
+    addRect(pixels, 12, 13, 3, 1, skin.beard);
+  }
+  if (beardStyle === 2) {
+    addRect(pixels, 12, 10, 4, 1, skin.beard);
+    addRect(pixels, 11, 11, 4, 2, skin.beard);
+    addRect(pixels, 10, 12, 2, 1, skin.beard);
+  }
+  if (beardStyle === 3) {
+    addRect(pixels, 11, 10, 5, 2, skin.beard);
+    addRect(pixels, 12, 12, 5, 1, skin.beard);
+    addRect(pixels, 14, 13, 2, 1, skin.beard);
+  }
 
   addRect(pixels, 9, 9, 2, 2, palette.dark);
   addRect(pixels, 9, 12, 2, 2, palette.dark);
@@ -152,9 +195,31 @@ const buildRobe = (index: number) => {
   const palette = robePalettes[index];
   const pixels: Pixel[] = [];
 
-  addRect(pixels, 9, 13, 8, 6, palette.main);
-  addRect(pixels, 8, 16, 10, 6, palette.main);
-  addRect(pixels, 7, 20, 12, 4, palette.dark);
+  const robeStyle = index % 4;
+  if (robeStyle === 0) {
+    addRect(pixels, 9, 13, 8, 6, palette.main);
+    addRect(pixels, 8, 16, 10, 6, palette.main);
+    addRect(pixels, 7, 20, 12, 4, palette.dark);
+  }
+  if (robeStyle === 1) {
+    addRect(pixels, 9, 13, 7, 5, palette.main);
+    addRect(pixels, 8, 17, 9, 5, palette.main);
+    addRect(pixels, 7, 21, 11, 3, palette.dark);
+    addRect(pixels, 14, 16, 2, 5, palette.dark);
+  }
+  if (robeStyle === 2) {
+    addRect(pixels, 10, 13, 7, 6, palette.main);
+    addRect(pixels, 9, 17, 9, 5, palette.main);
+    addRect(pixels, 8, 21, 11, 3, palette.dark);
+    addRect(pixels, 11, 19, 2, 3, palette.dark);
+  }
+  if (robeStyle === 3) {
+    addRect(pixels, 9, 14, 8, 5, palette.main);
+    addRect(pixels, 8, 18, 10, 4, palette.main);
+    addRect(pixels, 7, 21, 12, 3, palette.dark);
+    addRect(pixels, 12, 16, 2, 6, palette.dark);
+  }
+
   addRect(pixels, 11, 18, 6, 1, palette.accent);
   addRect(pixels, 13, 14, 4, 3, palette.accent);
   addPixel(pixels, 12, 15, palette.highlight);
@@ -170,9 +235,29 @@ const buildBoots = (index: number) => {
   const palette = bootPalettes[index];
   const pixels: Pixel[] = [];
 
-  addRect(pixels, 9, 24, 6, 3, palette.main);
-  addRect(pixels, 8, 26, 6, 2, palette.dark);
-  addRect(pixels, 13, 25, 4, 2, palette.main);
+  const bootStyle = index % 4;
+  if (bootStyle === 0) {
+    addRect(pixels, 9, 24, 6, 3, palette.main);
+    addRect(pixels, 8, 26, 6, 2, palette.dark);
+    addRect(pixels, 13, 25, 4, 2, palette.main);
+  }
+  if (bootStyle === 1) {
+    addRect(pixels, 9, 23, 5, 4, palette.main);
+    addRect(pixels, 8, 26, 6, 2, palette.dark);
+    addRect(pixels, 14, 24, 4, 3, palette.main);
+  }
+  if (bootStyle === 2) {
+    addRect(pixels, 9, 25, 5, 2, palette.main);
+    addRect(pixels, 8, 26, 6, 2, palette.dark);
+    addRect(pixels, 13, 24, 5, 3, palette.main);
+    addRect(pixels, 14, 26, 4, 1, palette.dark);
+  }
+  if (bootStyle === 3) {
+    addRect(pixels, 9, 24, 4, 3, palette.main);
+    addRect(pixels, 8, 26, 5, 2, palette.dark);
+    addRect(pixels, 12, 24, 6, 3, palette.main);
+  }
+
   addRect(pixels, 13, 26, 4, 1, palette.dark);
   addPixel(pixels, 10, 25, palette.highlight);
   addPixel(pixels, 14, 25, palette.accent);
@@ -183,13 +268,39 @@ const buildStaff = (index: number) => {
   const palette = staffPalettes[index];
   const pixels: Pixel[] = [];
 
-  addRect(pixels, 21, 6, 1, 19, palette.main);
-  addRect(pixels, 20, 6, 1, 6, palette.dark);
-  addRect(pixels, 21, 10, 1, 6, palette.dark);
-  addRect(pixels, 20, 4, 3, 2, palette.accent);
-  addRect(pixels, 19, 5, 1, 1, palette.highlight);
-  addPixel(pixels, 22, 5, palette.highlight);
-  addPixel(pixels, 21, 3, palette.highlight);
+  const staffStyle = index % 4;
+  if (staffStyle === 0) {
+    addRect(pixels, 21, 6, 1, 19, palette.main);
+    addRect(pixels, 20, 6, 1, 6, palette.dark);
+    addRect(pixels, 21, 10, 1, 6, palette.dark);
+    addRect(pixels, 20, 4, 3, 2, palette.accent);
+    addRect(pixels, 19, 5, 1, 1, palette.highlight);
+    addPixel(pixels, 22, 5, palette.highlight);
+    addPixel(pixels, 21, 3, palette.highlight);
+  }
+  if (staffStyle === 1) {
+    addRect(pixels, 20, 7, 1, 18, palette.main);
+    addRect(pixels, 21, 7, 1, 10, palette.dark);
+    addRect(pixels, 19, 4, 3, 2, palette.accent);
+    addRect(pixels, 22, 4, 1, 2, palette.highlight);
+    addPixel(pixels, 18, 5, palette.highlight);
+  }
+  if (staffStyle === 2) {
+    addRect(pixels, 21, 6, 1, 18, palette.main);
+    addRect(pixels, 20, 8, 1, 6, palette.dark);
+    addRect(pixels, 22, 8, 1, 6, palette.dark);
+    addRect(pixels, 20, 3, 3, 2, palette.accent);
+    addRect(pixels, 22, 2, 1, 1, palette.highlight);
+    addPixel(pixels, 19, 4, palette.highlight);
+  }
+  if (staffStyle === 3) {
+    addRect(pixels, 20, 6, 1, 19, palette.main);
+    addRect(pixels, 21, 6, 1, 6, palette.dark);
+    addRect(pixels, 19, 4, 2, 2, palette.accent);
+    addRect(pixels, 21, 4, 2, 2, palette.accent);
+    addPixel(pixels, 22, 3, palette.highlight);
+    addPixel(pixels, 18, 5, palette.highlight);
+  }
   return pixels;
 };
 

@@ -10,7 +10,7 @@ export const useProfileStyles = createStyles(({ token }) => ({
     width: "100%",
   },
   photoCard: {
-    height: "100%",
+    height: "auto",
   },
   photoBox: {
     position: "relative",

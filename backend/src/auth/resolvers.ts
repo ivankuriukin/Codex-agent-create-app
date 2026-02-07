@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
 import { prisma } from "../db/prisma.js";
+import { redisClient } from "../db/redis.js";
 import {
   issueTokens,
   setAuthCookies,
@@ -72,10 +73,8 @@ export const authResolvers = {
   logout: async (_: unknown, __: unknown, context: { req: Request; res: Response }) => {
     const userId = readAccessUserId(context.req);
     if (userId) {
-      await prisma.user.update({
-        where: { id: userId },
-        data: { refreshTokenHash: null },
-      });
+      const refreshKey = `auth:refresh:${userId}`;
+      await redisClient.del(refreshKey);
     }
 
     clearAuthCookies(context.res);
