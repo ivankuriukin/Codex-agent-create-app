@@ -18,7 +18,7 @@ services:
   backend:
     build: ./backend
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/app?schema=public
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@db:5432/app
       REDIS_URL: redis://redis:6379
       PORT: 4000
       FRONTEND_ORIGIN: http://localhost:5173
@@ -27,6 +27,7 @@ services:
       ACCESS_TOKEN_TTL: 15m
       REFRESH_TOKEN_TTL: 7d
       NODE_ENV: production
+      TELEGRAM_BOT_TOKEN: change_me_telegram
     depends_on:
       - db
       - redis
