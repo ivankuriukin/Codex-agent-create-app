@@ -25,3 +25,4 @@ dist-ssr
 
 # Runtime uploads
 backend/uploads
+playwright/
