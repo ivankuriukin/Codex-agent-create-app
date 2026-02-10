@@ -1,4 +1,6 @@
-import { type ReactNode, type RefObject, useRef } from "react";
+import { createCalendar } from '@internationalized/date';
+import type { DateSegment } from '@react-types/datepicker';
+import { type ReactNode, type RefObject, useRef } from 'react';
 import {
   DismissButton,
   FocusScope,
@@ -9,10 +11,10 @@ import {
   useDialog,
   useOverlay,
   useOverlayPosition,
-} from "react-aria";
-import { useDateFieldState, useDatePickerState } from "react-stately";
-import { createCalendar } from "@internationalized/date";
-import { Calendar } from "../calendar";
+} from 'react-aria';
+import { useDateFieldState, useDatePickerState } from 'react-stately';
+
+import { Calendar } from '../calendar';
 
 type DatePickerProps = {
   label?: ReactNode;
@@ -34,13 +36,17 @@ export function DatePicker({
   dialogClassName,
   ...props
 }: DatePickerProps) {
-  const state = useDatePickerState({ ...props, createCalendar });
+  const locale = props.locale ?? 'en-US';
+  const state = useDatePickerState({ ...props, locale, createCalendar });
   const ref = useRef<HTMLDivElement>(null);
-  const { groupProps, labelProps, fieldProps, buttonProps, dialogProps, calendarProps } = useDatePicker(
-    { ...props, label },
-    state,
-    ref
-  );
+  const {
+    groupProps,
+    labelProps,
+    fieldProps,
+    buttonProps,
+    dialogProps,
+    calendarProps,
+  } = useDatePicker({ ...props, label }, state, ref);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { buttonProps: triggerProps } = useButton(buttonProps, buttonRef);
 
@@ -48,8 +54,19 @@ export function DatePicker({
     <div className={className}>
       {label ? <span {...labelProps}>{label}</span> : null}
       <div {...groupProps} ref={ref}>
-        <DateField {...fieldProps} className={fieldClassName} segmentClassName={segmentClassName} />
-        <button {...triggerProps} ref={buttonRef} className={buttonClassName} type="button">
+        <DateField
+          {...fieldProps}
+          createCalendar={createCalendar}
+          locale={locale}
+          className={fieldClassName}
+          segmentClassName={segmentClassName}
+        />
+        <button
+          {...triggerProps}
+          ref={buttonRef}
+          className={buttonClassName}
+          type="button"
+        >
           ▼
         </button>
       </div>
@@ -77,14 +94,19 @@ function DateField({ className, segmentClassName, ...props }: DateFieldProps) {
   return (
     <div {...fieldProps} ref={ref} className={className}>
       {state.segments.map((segment, index) => (
-        <DateSegment key={index} segment={segment} state={state} className={segmentClassName} />
+        <DateSegment
+          key={index}
+          segment={segment}
+          state={state}
+          className={segmentClassName}
+        />
       ))}
     </div>
   );
 }
 
 type DateSegmentProps = {
-  segment: any;
+  segment: DateSegment;
   state: ReturnType<typeof useDateFieldState>;
   className?: string;
 };
@@ -109,15 +131,18 @@ type PopoverProps = {
 
 function Popover({ triggerRef, state, children, className }: PopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { overlayProps } = useOverlay({
-    isOpen: state.isOpen,
-    onClose: state.close,
-    isDismissable: true,
-  }, ref);
+  const { overlayProps } = useOverlay(
+    {
+      isOpen: state.isOpen,
+      onClose: state.close,
+      isDismissable: true,
+    },
+    ref,
+  );
   const { overlayProps: positionProps } = useOverlayPosition({
     targetRef: triggerRef,
     overlayRef: ref,
-    placement: "bottom start",
+    placement: 'bottom start',
     offset: 8,
     isOpen: state.isOpen,
   });

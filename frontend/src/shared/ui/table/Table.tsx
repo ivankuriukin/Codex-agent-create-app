@@ -1,19 +1,27 @@
-import { type ReactNode, useRef } from "react";
+import type { Node } from '@react-types/shared';
+import { type ReactNode, useRef } from 'react';
 import {
   useTable,
   useTableCell,
   useTableColumnHeader,
   useTableHeaderRow,
   useTableRow,
-} from "react-aria";
-import { Cell, Row, useTableState } from "react-stately";
+} from 'react-aria';
+import {
+  Cell,
+  Column,
+  Row,
+  TableBody,
+  TableHeader,
+  useTableState,
+} from 'react-stately';
 
 type ColumnDef = {
   key: string;
   name: ReactNode;
 };
 
-type TableProps<T> = {
+type TableProps<T extends { id: string | number }> = {
   columns: ColumnDef[];
   items: T[];
   renderCell: (item: T, columnKey: string) => ReactNode;
@@ -25,7 +33,7 @@ type TableProps<T> = {
   cellClassName?: string;
 };
 
-export function Table<T>({
+export function Table<T extends { id: string | number }>({
   columns,
   items,
   renderCell,
@@ -37,12 +45,21 @@ export function Table<T>({
   cellClassName,
 }: TableProps<T>) {
   const state = useTableState({
-    columns,
-    items,
-    children: (item) => (
-      <Row key={String(getRowKey ? getRowKey(item) : (item as any).id)}>
-        {(columnKey) => <Cell>{renderCell(item, String(columnKey))}</Cell>}
-      </Row>
+    children: (
+      <>
+        <TableHeader columns={columns}>
+          {(column) => <Column key={column.key}>{column.name}</Column>}
+        </TableHeader>
+        <TableBody items={items}>
+          {(item) => (
+            <Row key={String(getRowKey ? getRowKey(item) : item.id)}>
+              {(columnKey) => (
+                <Cell>{renderCell(item, String(columnKey))}</Cell>
+              )}
+            </Row>
+          )}
+        </TableBody>
+      </>
     ),
   });
   const ref = useRef<HTMLTableElement>(null);
@@ -78,13 +95,18 @@ export function Table<T>({
 }
 
 type HeaderRowProps = {
-  headerRow: any;
+  headerRow: Node<unknown>;
   state: ReturnType<typeof useTableState>;
   className?: string;
   headerCellClassName?: string;
 };
 
-function TableHeaderRow({ headerRow, state, className, headerCellClassName }: HeaderRowProps) {
+function TableHeaderRow({
+  headerRow,
+  state,
+  className,
+  headerCellClassName,
+}: HeaderRowProps) {
   const ref = useRef<HTMLTableRowElement>(null);
   const { rowProps } = useTableHeaderRow({ node: headerRow }, state, ref);
 
@@ -103,14 +125,18 @@ function TableHeaderRow({ headerRow, state, className, headerCellClassName }: He
 }
 
 type ColumnHeaderProps = {
-  column: any;
+  column: Node<unknown>;
   state: ReturnType<typeof useTableState>;
   className?: string;
 };
 
 function TableColumnHeader({ column, state, className }: ColumnHeaderProps) {
   const ref = useRef<HTMLTableCellElement>(null);
-  const { columnHeaderProps } = useTableColumnHeader({ node: column }, state, ref);
+  const { columnHeaderProps } = useTableColumnHeader(
+    { node: column },
+    state,
+    ref,
+  );
 
   return (
     <th {...columnHeaderProps} ref={ref} className={className}>
@@ -120,7 +146,7 @@ function TableColumnHeader({ column, state, className }: ColumnHeaderProps) {
 }
 
 type RowProps = {
-  row: any;
+  row: Node<unknown>;
   state: ReturnType<typeof useTableState>;
   className?: string;
   cellClassName?: string;
@@ -133,14 +159,19 @@ function TableRow({ row, state, className, cellClassName }: RowProps) {
   return (
     <tr {...rowProps} ref={ref} className={className}>
       {[...row.childNodes].map((cell) => (
-        <TableCell key={cell.key} cell={cell} state={state} className={cellClassName} />
+        <TableCell
+          key={cell.key}
+          cell={cell}
+          state={state}
+          className={cellClassName}
+        />
       ))}
     </tr>
   );
 }
 
 type CellProps = {
-  cell: any;
+  cell: Node<unknown>;
   state: ReturnType<typeof useTableState>;
   className?: string;
 };

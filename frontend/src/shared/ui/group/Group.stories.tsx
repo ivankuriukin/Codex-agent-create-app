@@ -1,12 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Group } from "./Group";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Group } from './Group';
 
 const meta: Meta<typeof Group> = {
-  title: "UI/Group",
+  title: 'UI/Group',
   component: Group,
   args: {
-    children: "Grouped content",
-    label: "Group",
+    children: 'Grouped content',
+    label: 'Group',
   },
 };
 

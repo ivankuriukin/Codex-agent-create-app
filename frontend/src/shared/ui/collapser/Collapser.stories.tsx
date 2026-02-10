@@ -1,12 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Collapser } from "./Collapser";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Collapser } from './Collapser';
 
 const meta: Meta<typeof Collapser> = {
-  title: "UI/Collapser",
+  title: 'UI/Collapser',
   component: Collapser,
   args: {
-    title: "Toggle",
-    children: "Hidden content",
+    title: 'Toggle',
+    children: 'Hidden content',
   },
 };
 

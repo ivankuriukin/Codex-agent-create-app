@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Select } from "./Select";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Select } from './Select';
 
 const meta: Meta<typeof Select> = {
-  title: "UI/Form/Select",
+  title: 'UI/Form/Select',
   component: Select,
 };
 
@@ -12,10 +13,10 @@ type Story = StoryObj<typeof Select>;
 
 export const Default: Story = {
   args: {
-    label: "Team",
+    label: 'Team',
     items: [
-      { id: "alpha", label: "Alpha" },
-      { id: "beta", label: "Beta" },
+      { id: 'alpha', label: 'Alpha' },
+      { id: 'beta', label: 'Beta' },
     ],
   },
 };

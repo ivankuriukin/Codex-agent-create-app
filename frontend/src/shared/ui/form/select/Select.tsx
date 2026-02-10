@@ -1,4 +1,5 @@
-import { type ReactNode, type RefObject, useRef } from "react";
+import type { Node } from '@react-types/shared';
+import { type ReactNode, type RefObject, useRef } from 'react';
 import {
   type AriaListBoxOptions,
   type AriaSelectProps,
@@ -11,15 +12,15 @@ import {
   useOverlay,
   useOverlayPosition,
   useSelect,
-} from "react-aria";
-import { Item, useSelectState } from "react-stately";
+} from 'react-aria';
+import { Item, useSelectState } from 'react-stately';
 
 type SelectItem = {
   id: string;
   label: string;
 };
 
-type SelectProps = Omit<AriaSelectProps<SelectItem>, "children"> & {
+type SelectProps = Omit<AriaSelectProps<SelectItem>, 'children'> & {
   items: SelectItem[];
   className?: string;
   triggerClassName?: string;
@@ -43,31 +44,40 @@ export function Select({
     children: (item) => <Item key={item.id}>{item.label}</Item>,
   });
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const { labelProps, triggerProps, valueProps, menuProps } = useSelect(props, state, triggerRef);
+  const { labelProps, triggerProps, valueProps, menuProps } = useSelect(
+    props,
+    state,
+    triggerRef,
+  );
   const { buttonProps } = useButton(triggerProps, triggerRef);
   const { focusProps, isFocusVisible } = useFocusRing();
 
   return (
     <div className={className}>
-      {props.label && (
-        <label {...labelProps}>
-          {props.label}
-        </label>
-      )}
+      {props.label && <label {...labelProps}>{props.label}</label>}
       <button
         {...mergeProps(buttonProps, focusProps)}
         ref={triggerRef}
         className={triggerClassName}
-        data-focus-visible={isFocusVisible || undefined}
+        data-focus-visible={isFocusVisible}
       >
         <span {...valueProps}>
-          {state.selectedItem ? state.selectedItem.rendered : "Select..."}
+          {state.selectedItem ? state.selectedItem.rendered : 'Select...'}
         </span>
         <span aria-hidden="true">▾</span>
       </button>
       {state.isOpen && (
-        <Popover state={state} triggerRef={triggerRef} className={popoverClassName}>
-          <ListBox state={state} {...menuProps} className={listClassName} itemClassName={itemClassName} />
+        <Popover
+          state={state}
+          triggerRef={triggerRef}
+          className={popoverClassName}
+        >
+          <ListBox
+            state={state}
+            {...menuProps}
+            className={listClassName}
+            itemClassName={itemClassName}
+          />
         </Popover>
       )}
     </div>
@@ -89,12 +99,12 @@ function Popover({ state, triggerRef, children, className }: PopoverProps) {
       onClose: state.close,
       isDismissable: true,
     },
-    ref
+    ref,
   );
   const { overlayProps: positionProps } = useOverlayPosition({
     targetRef: triggerRef,
     overlayRef: ref,
-    placement: "bottom start",
+    placement: 'bottom start',
     offset: 8,
     isOpen: state.isOpen,
   });
@@ -125,14 +135,19 @@ function ListBox({ state, className, itemClassName, ...props }: ListBoxProps) {
   return (
     <ul {...listBoxProps} ref={ref} className={className}>
       {[...state.collection].map((item) => (
-        <Option key={item.key} item={item} state={state} className={itemClassName} />
+        <Option
+          key={item.key}
+          item={item}
+          state={state}
+          className={itemClassName}
+        />
       ))}
     </ul>
   );
 }
 
 type OptionProps = {
-  item: any;
+  item: Node<SelectItem>;
   state: ReturnType<typeof useSelectState>;
   className?: string;
 };
@@ -142,7 +157,7 @@ function Option({ item, state, className }: OptionProps) {
   const { optionProps, isSelected, isFocused, isDisabled } = useOption(
     { key: item.key },
     state,
-    ref
+    ref,
   );
 
   return (
@@ -150,9 +165,9 @@ function Option({ item, state, className }: OptionProps) {
       {...optionProps}
       ref={ref}
       className={className}
-      data-focused={isFocused || undefined}
-      data-selected={isSelected || undefined}
-      data-disabled={isDisabled || undefined}
+      data-focused={isFocused}
+      data-selected={isSelected}
+      data-disabled={isDisabled}
     >
       {item.rendered}
     </li>

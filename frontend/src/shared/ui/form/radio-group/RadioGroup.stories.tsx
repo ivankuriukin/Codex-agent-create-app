@@ -1,11 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Radio, RadioGroup } from "./RadioGroup";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Radio, RadioGroup } from './RadioGroup';
 
 const meta: Meta<typeof RadioGroup> = {
-  title: "UI/Form/RadioGroup",
+  title: 'UI/Form/RadioGroup',
   component: RadioGroup,
   args: {
-    label: "Role",
+    label: 'Role',
   },
 };
 

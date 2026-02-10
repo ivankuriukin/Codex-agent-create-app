@@ -1,11 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Checkbox } from "./Checkbox";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Checkbox } from './Checkbox';
 
 const meta: Meta<typeof Checkbox> = {
-  title: "UI/Form/Checkbox",
+  title: 'UI/Form/Checkbox',
   component: Checkbox,
   args: {
-    children: "Accept terms",
+    children: 'Accept terms',
   },
 };
 

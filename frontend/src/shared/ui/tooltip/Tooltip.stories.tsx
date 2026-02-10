@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Tooltip, TooltipTrigger } from "./Tooltip";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Tooltip, TooltipTrigger } from './Tooltip';
 
 const meta: Meta = {
-  title: "UI/Tooltip",
+  title: 'UI/Tooltip',
 };
 
 export default meta;

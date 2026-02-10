@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Tag, Tags } from "./Tags";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Tag, Tags } from './Tags';
 
 const meta: Meta = {
-  title: "UI/Tags",
+  title: 'UI/Tags',
 };
 
 export default meta;

@@ -1,27 +1,29 @@
-import { type ReactNode, useRef } from "react";
+import {
+  type CalendarDate,
+  createCalendar,
+  type DateValue,
+  getLocalTimeZone,
+  getWeeksInMonth,
+  isSameDay,
+  startOfWeek,
+  today,
+} from '@internationalized/date';
+import { type ReactNode, useRef } from 'react';
 import {
   useButton,
   useCalendar,
   useCalendarCell,
   useCalendarGrid,
   useLocale,
-} from "react-aria";
-import { useCalendarState } from "react-stately";
-import {
-  createCalendar,
-  getLocalTimeZone,
-  getWeeksInMonth,
-  isSameDay,
-  startOfWeek,
-  today,
-} from "@internationalized/date";
+} from 'react-aria';
+import { useCalendarState } from 'react-stately';
 
 type CalendarProps = {
-  value?: any;
-  defaultValue?: any;
-  minValue?: any;
-  maxValue?: any;
-  onChange?: (value: any) => void;
+  value?: DateValue;
+  defaultValue?: DateValue;
+  minValue?: DateValue;
+  maxValue?: DateValue;
+  onChange?: (value: DateValue) => void;
   className?: string;
   headerClassName?: string;
   gridClassName?: string;
@@ -52,7 +54,8 @@ export function Calendar({
     visibleDuration: { months: 1 },
     defaultValue: props.defaultValue ?? today(getLocalTimeZone()),
   });
-  const { calendarProps, prevButtonProps, nextButtonProps, title } = useCalendar(props, state);
+  const { calendarProps, prevButtonProps, nextButtonProps, title } =
+    useCalendar(props, state);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const { buttonProps: prevProps } = useButton(prevButtonProps, prevRef);
@@ -71,7 +74,11 @@ export function Calendar({
           </button>
         </div>
       </div>
-      <CalendarGrid state={state} className={gridClassName} cellClassName={cellClassName} />
+      <CalendarGrid
+        state={state}
+        className={gridClassName}
+        cellClassName={cellClassName}
+      />
     </div>
   );
 }
@@ -84,7 +91,11 @@ type CalendarGridProps = {
 
 function CalendarGrid({ state, className, cellClassName }: CalendarGridProps) {
   const ref = useRef<HTMLTableElement>(null);
-  const { gridProps, headerProps, weekDays, weeksInMonth } = useCalendarGrid({}, state, ref);
+  const { gridProps, headerProps, weekDays, weeksInMonth } = useCalendarGrid(
+    {},
+    state,
+    ref,
+  );
   const { locale } = useLocale();
   const startDate = state.visibleRange.start;
   const weeks = [];
@@ -112,7 +123,12 @@ function CalendarGrid({ state, className, cellClassName }: CalendarGridProps) {
         {weeks.map((week, weekIndex) => (
           <tr key={weekIndex}>
             {week.map((date, index) => (
-              <CalendarCell key={index} state={state} date={date} className={cellClassName} />
+              <CalendarCell
+                key={index}
+                state={state}
+                date={date}
+                className={cellClassName}
+              />
             ))}
           </tr>
         ))}
@@ -123,28 +139,35 @@ function CalendarGrid({ state, className, cellClassName }: CalendarGridProps) {
 
 type CalendarCellProps = {
   state: ReturnType<typeof useCalendarState>;
-  date: any;
+  date: CalendarDate;
   className?: string;
 };
 
 function CalendarCell({ state, date, className }: CalendarCellProps) {
   const ref = useRef<HTMLTableCellElement>(null);
-  const { cellProps, buttonProps, isSelected, isDisabled, isOutsideVisibleRange } = useCalendarCell(
-    { date },
-    state,
-    ref
-  );
+  const {
+    cellProps,
+    buttonProps,
+    isSelected,
+    isDisabled,
+    isOutsideVisibleRange,
+  } = useCalendarCell({ date }, state, ref);
 
   const isToday = isSameDay(date, today(getLocalTimeZone()));
 
   return (
-    <td {...cellProps} ref={ref} className={className} data-outside={isOutsideVisibleRange || undefined}>
+    <td
+      {...cellProps}
+      ref={ref}
+      className={className}
+      data-outside={isOutsideVisibleRange}
+    >
       <button
         {...buttonProps}
         type="button"
-        data-selected={isSelected || undefined}
-        data-disabled={isDisabled || undefined}
-        data-today={isToday || undefined}
+        data-selected={isSelected}
+        data-disabled={isDisabled}
+        data-today={isToday}
       >
         {date.day}
       </button>

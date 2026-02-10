@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Table } from "./Table";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Table } from './Table';
 
 type Item = {
   id: string;
@@ -8,7 +9,7 @@ type Item = {
 };
 
 const meta: Meta<typeof Table<Item>> = {
-  title: "UI/Table",
+  title: 'UI/Table',
   component: Table,
 };
 
@@ -19,14 +20,14 @@ type Story = StoryObj<typeof Table<Item>>;
 export const Default: Story = {
   args: {
     columns: [
-      { key: "name", name: "Name" },
-      { key: "role", name: "Role" },
+      { key: 'name', name: 'Name' },
+      { key: 'role', name: 'Role' },
     ],
     items: [
-      { id: "1", name: "Ada", role: "Engineer" },
-      { id: "2", name: "Linus", role: "Maintainer" },
+      { id: '1', name: 'Ada', role: 'Engineer' },
+      { id: '2', name: 'Linus', role: 'Maintainer' },
     ],
-    renderCell: (item, columnKey) => (item as any)[columnKey],
+    renderCell: (item, columnKey) => item[columnKey as keyof Item],
     getRowKey: (item) => item.id,
   },
 };

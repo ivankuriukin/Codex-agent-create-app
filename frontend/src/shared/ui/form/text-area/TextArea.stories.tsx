@@ -1,12 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { TextArea } from "./TextArea";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { TextArea } from './TextArea';
 
 const meta: Meta<typeof TextArea> = {
-  title: "UI/Form/TextArea",
+  title: 'UI/Form/TextArea',
   component: TextArea,
   args: {
-    label: "About",
-    placeholder: "Type here...",
+    label: 'About',
+    placeholder: 'Type here...',
   },
 };
 

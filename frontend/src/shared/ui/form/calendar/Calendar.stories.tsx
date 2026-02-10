@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Calendar } from "./Calendar";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Calendar } from './Calendar';
 
 const meta: Meta<typeof Calendar> = {
-  title: "UI/Form/Calendar",
+  title: 'UI/Form/Calendar',
   component: Calendar,
 };
 

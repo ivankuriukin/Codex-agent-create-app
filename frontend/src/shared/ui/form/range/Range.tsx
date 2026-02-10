@@ -1,6 +1,6 @@
-import { type ReactNode, type RefObject, useRef } from "react";
-import { useNumberFormatter, useRangeSlider, useSliderThumb } from "react-aria";
-import { useRangeSliderState } from "react-stately";
+import { useSliderState } from '@react-stately/slider';
+import { type ReactNode, type RefObject, useRef } from 'react';
+import { useNumberFormatter, useSlider, useSliderThumb } from 'react-aria';
 
 type RangeProps = {
   label?: ReactNode;
@@ -19,20 +19,27 @@ export function Range({
   ...props
 }: RangeProps) {
   const numberFormatter = useNumberFormatter();
-  const state = useRangeSliderState({ ...props, numberFormatter });
+  const state = useSliderState({ ...props, numberFormatter });
   const trackRef = useRef<HTMLDivElement>(null);
-  const { groupProps, trackProps, labelProps, outputProps } = useRangeSlider(
+  const { groupProps, trackProps, labelProps, outputProps } = useSlider(
     { label },
     state,
-    trackRef
+    trackRef,
   );
 
   return (
     <div {...groupProps} className={className}>
       {label ? <span {...labelProps}>{label}</span> : null}
       <div {...trackProps} ref={trackRef} className={trackClassName}>
-        <Thumb index={0} state={state} trackRef={trackRef} className={thumbClassName} />
-        <Thumb index={1} state={state} trackRef={trackRef} className={thumbClassName} />
+        {state.values.map((_, index) => (
+          <Thumb
+            key={index}
+            index={index}
+            state={state}
+            trackRef={trackRef}
+            className={thumbClassName}
+          />
+        ))}
       </div>
       <output {...outputProps} className={outputClassName}>
         {`${state.getThumbValueLabel(0)} – ${state.getThumbValueLabel(1)}`}
@@ -43,7 +50,7 @@ export function Range({
 
 type ThumbProps = {
   index: number;
-  state: ReturnType<typeof useRangeSliderState>;
+  state: ReturnType<typeof useSliderState>;
   trackRef: RefObject<HTMLDivElement>;
   className?: string;
 };
@@ -52,15 +59,15 @@ function Thumb({ index, state, trackRef, className }: ThumbProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { thumbProps, inputProps, isDragging, isFocused } = useSliderThumb(
     { index, trackRef, inputRef },
-    state
+    state,
   );
 
   return (
     <div
       {...thumbProps}
       className={className}
-      data-dragging={isDragging || undefined}
-      data-focused={isFocused || undefined}
+      data-dragging={isDragging}
+      data-focused={isFocused}
     >
       <input {...inputProps} ref={inputRef} />
     </div>

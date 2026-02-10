@@ -1,13 +1,14 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Card } from "./Card";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Card } from './Card';
 
 const meta: Meta<typeof Card> = {
-  title: "UI/Card",
+  title: 'UI/Card',
   component: Card,
   args: {
-    header: "Card header",
-    children: "Card content",
-    footer: "Card footer",
+    header: 'Card header',
+    children: 'Card content',
+    footer: 'Card footer',
   },
 };
 

@@ -1,11 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Range } from "./Range";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Range } from './Range';
 
 const meta: Meta<typeof Range> = {
-  title: "UI/Form/Range",
+  title: 'UI/Form/Range',
   component: Range,
   args: {
-    label: "Price",
+    label: 'Price',
     minValue: 0,
     maxValue: 100,
     defaultValue: [20, 80],

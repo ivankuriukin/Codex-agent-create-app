@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Menu } from "./Menu";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Menu } from './Menu';
 
 const meta: Meta<typeof Menu> = {
-  title: "UI/Menu",
+  title: 'UI/Menu',
   component: Menu,
 };
 
@@ -12,11 +13,11 @@ type Story = StoryObj<typeof Menu>;
 
 export const Default: Story = {
   args: {
-    triggerLabel: "Open menu",
+    triggerLabel: 'Open menu',
     items: [
-      { id: "profile", label: "Profile" },
-      { id: "settings", label: "Settings" },
-      { id: "logout", label: "Logout" },
+      { id: 'profile', label: 'Profile' },
+      { id: 'settings', label: 'Settings' },
+      { id: 'logout', label: 'Logout' },
     ],
   },
 };

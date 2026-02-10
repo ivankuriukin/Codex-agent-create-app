@@ -1,10 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { TelegramIcon } from "./TelegramIcon";
-import { TelegramLoginButton } from "./TelegramLoginButton";
-import { TelegramLoginWidget } from "./TelegramLoginWidget";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { TelegramIcon } from './TelegramIcon';
+import { TelegramLoginButton } from './TelegramLoginButton';
+import { TelegramLoginWidget } from './TelegramLoginWidget';
 
 const meta: Meta = {
-  title: "UI/Telegram",
+  title: 'UI/Telegram',
 };
 
 export default meta;

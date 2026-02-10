@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { WizardSpriteComposer } from "./WizardSpriteComposer";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { WizardSpriteComposer } from './WizardSpriteComposer';
 
 const meta: Meta<typeof WizardSpriteComposer> = {
-  title: "UI/WizardSpriteComposer",
+  title: 'UI/WizardSpriteComposer',
   component: WizardSpriteComposer,
 };
 

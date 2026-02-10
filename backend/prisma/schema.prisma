@@ -25,4 +25,19 @@ model User {
   refreshTokenHash String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  settings         UserSettings?
+}
+
+enum ThemeMode {
+  light
+  dark
+}
+
+model UserSettings {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  theme     ThemeMode @default(light)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

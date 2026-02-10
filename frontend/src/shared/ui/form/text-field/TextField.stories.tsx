@@ -1,12 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { TextField } from "./TextField";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { TextField } from './TextField';
 
 const meta: Meta<typeof TextField> = {
-  title: "UI/Form/TextField",
+  title: 'UI/Form/TextField',
   component: TextField,
   args: {
-    label: "Email",
-    placeholder: "hello@example.com",
+    label: 'Email',
+    placeholder: 'hello@example.com',
   },
 };
 

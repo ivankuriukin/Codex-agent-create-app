@@ -1,4 +1,5 @@
-import { type ReactNode, useRef } from "react";
+import type { Node } from '@react-types/shared';
+import { type ReactNode, useRef } from 'react';
 import {
   DismissButton,
   useButton,
@@ -7,8 +8,8 @@ import {
   useMenuTrigger,
   useOverlay,
   useOverlayPosition,
-} from "react-aria";
-import { Item, useMenuTriggerState, useTreeState } from "react-stately";
+} from 'react-aria';
+import { Item, useMenuTriggerState, useTreeState } from 'react-stately';
 
 type MenuItemData = {
   id: string;
@@ -40,7 +41,7 @@ export function Menu({
   const { menuTriggerProps, menuProps } = useMenuTrigger({}, state, triggerRef);
   const { buttonProps } = useButton(menuTriggerProps, triggerRef);
   const menuState = useTreeState({
-    selectionMode: "none",
+    selectionMode: 'none',
     items,
     children: (item) => <Item key={item.id}>{item.label}</Item>,
   });
@@ -73,11 +74,14 @@ type MenuPopoverProps = {
 
 function MenuPopover({ state, triggerRef, children }: MenuPopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { overlayProps } = useOverlay({ isOpen: state.isOpen, onClose: state.close, isDismissable: true }, ref);
+  const { overlayProps } = useOverlay(
+    { isOpen: state.isOpen, onClose: state.close, isDismissable: true },
+    ref,
+  );
   const { overlayProps: positionProps } = useOverlayPosition({
     targetRef: triggerRef,
     overlayRef: ref,
-    placement: "bottom start",
+    placement: 'bottom start',
     offset: 8,
     isOpen: state.isOpen,
   });
@@ -98,7 +102,13 @@ type MenuListProps = {
   itemClassName?: string;
 } & Parameters<typeof useMenu>[0];
 
-function MenuList({ state, onAction, className, itemClassName, ...props }: MenuListProps) {
+function MenuList({
+  state,
+  onAction,
+  className,
+  itemClassName,
+  ...props
+}: MenuListProps) {
   const ref = useRef<HTMLUListElement>(null);
   const { menuProps } = useMenu(props, state, ref);
 
@@ -117,7 +127,7 @@ function MenuList({ state, onAction, className, itemClassName, ...props }: MenuL
 }
 
 type MenuItemProps = {
-  item: any;
+  item: Node<MenuItemData>;
   onAction?: (key: string) => void;
   className?: string;
 };
@@ -125,8 +135,12 @@ type MenuItemProps = {
 function MenuItem({ item, onAction, className }: MenuItemProps) {
   const ref = useRef<HTMLLIElement>(null);
   const { menuItemProps, isDisabled, isFocused } = useMenuItem(
-    { key: item.key, isDisabled: item.props?.isDisabled, onAction: (key) => onAction?.(String(key)) },
-    ref
+    {
+      key: item.key,
+      isDisabled: item.props?.isDisabled,
+      onAction: (key) => onAction?.(String(key)),
+    },
+    ref,
   );
 
   return (
@@ -134,8 +148,8 @@ function MenuItem({ item, onAction, className }: MenuItemProps) {
       {...menuItemProps}
       ref={ref}
       className={className}
-      data-focused={isFocused || undefined}
-      data-disabled={isDisabled || undefined}
+      data-focused={isFocused}
+      data-disabled={isDisabled}
     >
       {item.rendered}
     </li>

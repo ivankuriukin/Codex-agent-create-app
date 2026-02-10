@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Footer, Header, Main, Slider } from "./Layer";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Footer, Header, Main, Slider } from './Layer';
 
 const meta: Meta = {
-  title: "UI/Layer",
+  title: 'UI/Layer',
 };
 
 export default meta;

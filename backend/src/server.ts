@@ -11,6 +11,7 @@ import { typeDefs } from "./graphql/typeDefs.js";
 import { authMiddleware } from "./auth/service.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { profileRouter } from "./routes/profile.routes.js";
+import { settingsRouter } from "./routes/settings.routes.js";
 import fs from "fs";
 import path from "path";
 import { connectRedis } from "./db/redis.js";
@@ -41,6 +42,7 @@ export async function startServer() {
   }
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
+  app.use("/settings", settingsRouter);
 
   const server = new ApolloServer({ typeDefs, resolvers });
   await server.start();

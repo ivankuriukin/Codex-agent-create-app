@@ -16,6 +16,7 @@ module.exports = {
     "^@lib/(.*)$": "<rootDir>/src/shared/lib/$1",
     "^@config/(.*)$": "<rootDir>/src/shared/config/$1",
     "^@api/(.*)$": "<rootDir>/src/shared/api/$1",
+    "^react-konva$": "<rootDir>/src/__tests__/__mocks__/react-konva.tsx",
     "\\.(css|less|scss|sass)$": "identity-obj-proxy"
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
