@@ -1,10 +1,14 @@
-import { Card, Tag, Typography, Row, Col, Flex, List } from "antd";
-import { ThunderboltOutlined, RocketOutlined, DatabaseOutlined } from "@ant-design/icons";
+import {
+  DatabaseOutlined,
+  RocketOutlined,
+  ThunderboltOutlined,
+} from '@ant-design/icons';
+import { Card, Col, Flex, List, Row, Tag, Typography } from 'antd';
 
 const stats = [
-  { label: "Active sessions", value: "1,248", icon: <RocketOutlined /> },
-  { label: "Latency", value: "84 ms", icon: <ThunderboltOutlined /> },
-  { label: "Compute", value: "62%", icon: <DatabaseOutlined /> },
+  { label: 'Active sessions', value: '1,248', icon: <RocketOutlined /> },
+  { label: 'Latency', value: '84 ms', icon: <ThunderboltOutlined /> },
+  { label: 'Compute', value: '62%', icon: <DatabaseOutlined /> },
 ];
 
 export function HomePage() {
@@ -12,7 +16,8 @@ export function HomePage() {
     <Flex vertical gap="large">
       <Card title="Добро пожаловать в панель управления">
         <Typography.Paragraph type="secondary">
-          Собрано на Ant Design с тёмной темой и встроенной системой компонентов.
+          Собрано на Ant Design с тёмной темой и встроенной системой
+          компонентов.
         </Typography.Paragraph>
         <Tag color="blue">Status: Live</Tag>
       </Card>
@@ -30,9 +35,9 @@ export function HomePage() {
       <Card title="Последние события">
         <List
           dataSource={[
-            "Обновление маршрутов: /auth и /",
-            "Добавлен layout на Ant Design Layout",
-            "Стилизация под темную тему Ant Design",
+            'Обновление маршрутов: /auth и /',
+            'Добавлен layout на Ant Design Layout',
+            'Стилизация под темную тему Ant Design',
           ]}
           renderItem={(item) => (
             <List.Item>

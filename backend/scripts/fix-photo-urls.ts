@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
-import { prisma } from "../src/db/prisma.js";
+import fs from 'fs';
+import path from 'path';
+import { prisma } from '../src/db/prisma.js';
 
-const uploadsDir = path.join(process.cwd(), "uploads");
-const exts = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
+const uploadsDir = path.join(process.cwd(), 'uploads');
+const exts = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
 
 function fileExists(p: string) {
   try {
@@ -15,7 +15,7 @@ function fileExists(p: string) {
 
 async function run() {
   if (!fs.existsSync(uploadsDir)) {
-    console.log("No uploads directory, skipping.");
+    console.log('No uploads directory, skipping.');
     return;
   }
 
@@ -26,10 +26,10 @@ async function run() {
 
   let updated = 0;
   for (const user of users) {
-    const photoUrl = user.photoUrl ?? "";
-    if (!photoUrl.startsWith("/uploads/")) continue;
+    const photoUrl = user.photoUrl ?? '';
+    if (!photoUrl.startsWith('/uploads/')) continue;
 
-    const fileName = photoUrl.replace("/uploads/", "");
+    const fileName = photoUrl.replace('/uploads/', '');
     const currentPath = path.join(uploadsDir, fileName);
     if (fileExists(currentPath)) continue;
 

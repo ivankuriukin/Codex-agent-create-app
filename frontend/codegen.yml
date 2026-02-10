@@ -1,5 +1,5 @@
-schema: "src/shared/api/schema.graphql"
-documents: "src/**/*.graphql"
+schema: 'src/shared/api/schema.graphql'
+documents: 'src/**/*.graphql'
 generates:
   src/shared/api/graphql.ts:
     plugins:
@@ -10,5 +10,5 @@ generates:
       withHooks: true
       withComponent: false
       withHOC: false
-      gqlImport: "@apollo/client#gql"
+      gqlImport: '@apollo/client#gql'
       reactApolloVersion: 3

@@ -6,6 +6,7 @@ describe('ErrorBoundary', () => {
   it('renders fallback', () => {
     function Boom() {
       throw new Error('Boom');
+      return null;
     }
 
     render(

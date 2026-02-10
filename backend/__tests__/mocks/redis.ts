@@ -7,7 +7,7 @@ const redisClient = {
   quit: jest.fn(async () => undefined),
   set: jest.fn(async (key: string, value: string) => {
     store.set(key, value);
-    return "OK";
+    return 'OK';
   }),
   get: jest.fn(async (key: string) => store.get(key) ?? null),
   del: jest.fn(async (key: string) => {

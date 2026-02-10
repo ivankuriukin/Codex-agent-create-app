@@ -1,10 +1,10 @@
-import { Button, Card, Flex, Row, Col, Space, Typography } from 'antd';
 import { useAuthStore } from '@entities/auth';
 import { useProfileStyles } from '@pages/profile/profile.styles';
-import { TelegramLoginButton } from '@shared/ui';
-import { ProfilePhotoCard } from '@pages/profile/ui/ProfilePhotoCard';
 import { ProfileDetailsForm } from '@pages/profile/ui/ProfileDetailsForm';
+import { ProfilePhotoCard } from '@pages/profile/ui/ProfilePhotoCard';
+import { TelegramLoginButton } from '@shared/ui';
 import { WizardSpriteComposer } from '@shared/ui';
+import { Button, Card, Col, Flex, Row, Space, Typography } from 'antd';
 
 export function ProfilePage() {
   const authStore = useAuthStore();

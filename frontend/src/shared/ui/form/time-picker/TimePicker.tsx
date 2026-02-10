@@ -1,13 +1,14 @@
-import { type ReactNode, useRef } from "react";
-import { useDateSegment, useTimeField } from "react-aria";
-import { useTimeFieldState } from "react-stately";
+import { type ReactNode, useRef } from 'react';
+import { useDateSegment, useLocale, useTimeField } from 'react-aria';
+import { useTimeFieldState } from 'react-stately';
 
 type TimePickerProps = {
   label?: ReactNode;
+  locale?: string;
   className?: string;
   fieldClassName?: string;
   segmentClassName?: string;
-} & Parameters<typeof useTimeFieldState>[0];
+} & Omit<Parameters<typeof useTimeFieldState>[0], 'locale'>;
 
 export function TimePicker({
   label,
@@ -16,16 +17,28 @@ export function TimePicker({
   segmentClassName,
   ...props
 }: TimePickerProps) {
-  const state = useTimeFieldState(props);
+  const { locale: localeFromContext } = useLocale();
+  const { locale: localeProp, ...restProps } = props;
+  const locale = localeProp ?? localeFromContext ?? 'en-US';
+  const state = useTimeFieldState({ ...restProps, locale });
   const ref = useRef<HTMLDivElement>(null);
-  const { labelProps, fieldProps } = useTimeField({ ...props, label }, state, ref);
+  const { labelProps, fieldProps } = useTimeField(
+    { ...restProps, label },
+    state,
+    ref,
+  );
 
   return (
     <div className={className}>
       {label ? <span {...labelProps}>{label}</span> : null}
       <div {...fieldProps} ref={ref} className={fieldClassName}>
         {state.segments.map((segment, index) => (
-          <TimeSegment key={index} segment={segment} state={state} className={segmentClassName} />
+          <TimeSegment
+            key={index}
+            segment={segment}
+            state={state}
+            className={segmentClassName}
+          />
         ))}
       </div>
     </div>
@@ -33,7 +46,7 @@ export function TimePicker({
 }
 
 type TimeSegmentProps = {
-  segment: any;
+  segment: ReturnType<typeof useTimeFieldState>['segments'][number];
   state: ReturnType<typeof useTimeFieldState>;
   className?: string;
 };

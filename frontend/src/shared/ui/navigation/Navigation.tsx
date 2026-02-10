@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode } from 'react';
 
 type NavigationItem = {
   id: string;
@@ -13,7 +13,11 @@ type NavigationProps = {
   itemClassName?: string;
 };
 
-export function Navigation({ items, className, itemClassName }: NavigationProps) {
+export function Navigation({
+  items,
+  className,
+  itemClassName,
+}: NavigationProps) {
   return (
     <nav className={className} aria-label="Navigation">
       <ul>

@@ -1,7 +1,7 @@
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import { fileURLToPath } from "url";
-import path from "path";
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -10,25 +10,28 @@ export default [
   ...tseslint.configs.recommended,
   {
     ignores: [
-      "dist",
-      "node_modules",
-      "eslint.config.js",
-      "__tests__",
-      "scripts",
-      "jest.config.cjs",
-      "jest.setup.ts",
+      'dist',
+      'node_modules',
+      'eslint.config.js',
+      '__tests__',
+      'scripts',
+      'jest.config.cjs',
+      'jest.setup.ts',
     ],
   },
   {
-    files: ["src/**/*.ts"],
+    files: ['src/**/*.ts'],
     languageOptions: {
       parserOptions: {
-        project: "./tsconfig.json",
+        project: './tsconfig.json',
         tsconfigRootDir: __dirname,
       },
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
     },
   },
 ];

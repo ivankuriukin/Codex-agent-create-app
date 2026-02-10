@@ -1,12 +1,15 @@
-import { type ReactNode } from "react";
-import { useAuthStore } from "@entities/auth";
+import { useAuthStore } from '@entities/auth';
+import { type ReactNode } from 'react';
 
 type AuthSwitchProps = {
   authenticated: ReactNode;
   unauthenticated: ReactNode;
 };
 
-export function AuthSwitch({ authenticated, unauthenticated }: AuthSwitchProps) {
+export function AuthSwitch({
+  authenticated,
+  unauthenticated,
+}: AuthSwitchProps) {
   const authStore = useAuthStore();
 
   if (!authStore.isAuthResolved) {

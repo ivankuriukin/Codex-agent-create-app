@@ -1,5 +1,5 @@
-import Icon from "@ant-design/icons";
-import type { ComponentProps } from "react";
+import Icon from '@ant-design/icons';
+import type { ComponentProps } from 'react';
 
 const TelegramSvg = () => (
   <svg viewBox="0 0 240 240" aria-hidden="true">

@@ -1,14 +1,14 @@
 import {
   ApolloClient,
   ApolloProvider as ApolloRootProvider,
+  from,
   HttpLink,
   InMemoryCache,
-  from,
-} from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
-import type { ReactNode } from "react";
-import { apiBaseUrl } from "@config/env";
-import { AUTH_UNAUTHORIZED_EVENT } from "@shared/lib/auth-events";
+} from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { apiBaseUrl } from '@config/env';
+import { AUTH_UNAUTHORIZED_EVENT } from '@shared/lib/auth-events';
+import type { ReactNode } from 'react';
 
 type ApolloProviderProps = {
   children: ReactNode;
@@ -16,15 +16,16 @@ type ApolloProviderProps = {
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   const hasUnauthorized =
-    graphQLErrors?.some((error) => error.message === "Unauthorized") ?? false;
+    graphQLErrors?.some((error) => error.message === 'Unauthorized') ?? false;
 
   const statusCode =
-    typeof (networkError as { statusCode?: number } | undefined)?.statusCode === "number"
+    typeof (networkError as { statusCode?: number } | undefined)?.statusCode ===
+    'number'
       ? (networkError as { statusCode: number }).statusCode
       : undefined;
 
   if (hasUnauthorized || statusCode === 401 || statusCode === 403) {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent(AUTH_UNAUTHORIZED_EVENT));
     }
   }
@@ -32,7 +33,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const httpLink = new HttpLink({
   uri: `${apiBaseUrl}/graphql`,
-  credentials: "include",
+  credentials: 'include',
 });
 
 const client = new ApolloClient({

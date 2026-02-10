@@ -1,7 +1,7 @@
 export {
-  AuthStoreContext,
-  useAuthStore,
   type AuthContextValue,
+  AuthStoreContext,
   type AuthUser,
-} from "@entities/auth/lib/auth-context";
-export { AuthSwitch } from "@entities/auth/ui/AuthSwitch";
+  useAuthStore,
+} from '@entities/auth/lib/auth-context';
+export { AuthSwitch } from '@entities/auth/ui/AuthSwitch';

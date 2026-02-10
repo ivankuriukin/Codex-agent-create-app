@@ -15,6 +15,7 @@ type Story = StoryObj<typeof ErrorBoundary>;
 
 function Boom() {
   throw new Error('Boom');
+  return null;
 }
 
 export const Default: Story = {

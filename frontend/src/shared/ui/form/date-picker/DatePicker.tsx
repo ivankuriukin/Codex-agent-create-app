@@ -1,5 +1,4 @@
 import { createCalendar } from '@internationalized/date';
-import type { DateSegment } from '@react-types/datepicker';
 import { type ReactNode, type RefObject, useRef } from 'react';
 import {
   DismissButton,
@@ -9,6 +8,7 @@ import {
   useDatePicker,
   useDateSegment,
   useDialog,
+  useLocale,
   useOverlay,
   useOverlayPosition,
 } from 'react-aria';
@@ -18,6 +18,7 @@ import { Calendar } from '../calendar';
 
 type DatePickerProps = {
   label?: ReactNode;
+  locale?: string;
   className?: string;
   fieldClassName?: string;
   segmentClassName?: string;
@@ -36,8 +37,10 @@ export function DatePicker({
   dialogClassName,
   ...props
 }: DatePickerProps) {
-  const locale = props.locale ?? 'en-US';
-  const state = useDatePickerState({ ...props, locale, createCalendar });
+  const { locale: localeFromContext } = useLocale();
+  const { locale: localeProp, ...restProps } = props;
+  const locale = localeProp ?? localeFromContext ?? 'en-US';
+  const state = useDatePickerState({ ...restProps });
   const ref = useRef<HTMLDivElement>(null);
   const {
     groupProps,
@@ -46,7 +49,7 @@ export function DatePicker({
     buttonProps,
     dialogProps,
     calendarProps,
-  } = useDatePicker({ ...props, label }, state, ref);
+  } = useDatePicker({ ...restProps, label }, state, ref);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { buttonProps: triggerProps } = useButton(buttonProps, buttonRef);
 
@@ -82,6 +85,8 @@ export function DatePicker({
 }
 
 type DateFieldProps = Parameters<typeof useDateFieldState>[0] & {
+  locale?: string;
+  createCalendar: typeof createCalendar;
   className?: string;
   segmentClassName?: string;
 };
@@ -106,7 +111,7 @@ function DateField({ className, segmentClassName, ...props }: DateFieldProps) {
 }
 
 type DateSegmentProps = {
-  segment: DateSegment;
+  segment: ReturnType<typeof useDateFieldState>['segments'][number];
   state: ReturnType<typeof useDateFieldState>;
   className?: string;
 };
@@ -123,7 +128,7 @@ function DateSegment({ segment, state, className }: DateSegmentProps) {
 }
 
 type PopoverProps = {
-  triggerRef: RefObject<Element>;
+  triggerRef: RefObject<Element | null>;
   state: ReturnType<typeof useDatePickerState>;
   children: ReactNode;
   className?: string;
@@ -140,7 +145,7 @@ function Popover({ triggerRef, state, children, className }: PopoverProps) {
     ref,
   );
   const { overlayProps: positionProps } = useOverlayPosition({
-    targetRef: triggerRef,
+    targetRef: triggerRef as RefObject<Element>,
     overlayRef: ref,
     placement: 'bottom start',
     offset: 8,

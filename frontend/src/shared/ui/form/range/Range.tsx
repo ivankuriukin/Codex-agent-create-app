@@ -8,7 +8,7 @@ type RangeProps = {
   trackClassName?: string;
   thumbClassName?: string;
   outputClassName?: string;
-} & Parameters<typeof useRangeSliderState>[0];
+} & Omit<Parameters<typeof useSliderState>[0], 'numberFormatter'>;
 
 export function Range({
   label,
@@ -51,14 +51,14 @@ export function Range({
 type ThumbProps = {
   index: number;
   state: ReturnType<typeof useSliderState>;
-  trackRef: RefObject<HTMLDivElement>;
+  trackRef: RefObject<HTMLDivElement | null>;
   className?: string;
 };
 
 function Thumb({ index, state, trackRef, className }: ThumbProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { thumbProps, inputProps, isDragging, isFocused } = useSliderThumb(
-    { index, trackRef, inputRef },
+    { index, trackRef: trackRef as RefObject<HTMLDivElement>, inputRef },
     state,
   );
 

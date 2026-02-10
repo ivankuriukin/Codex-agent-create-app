@@ -1,16 +1,16 @@
-import bcrypt from "bcryptjs";
-import { PrismaClient } from "@prisma/client";
+import bcrypt from 'bcryptjs';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function run() {
-  const email = "demo@demo.com";
-  const password = "demo";
-  const name = "Demo";
+  const email = 'demo@demo.com';
+  const password = 'demo';
+  const name = 'Demo';
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    console.log("User already exists");
+    console.log('User already exists');
     return;
   }
 
@@ -19,7 +19,7 @@ async function run() {
     data: { email, name, passwordHash },
   });
 
-  console.log("User created");
+  console.log('User created');
 }
 
 run()

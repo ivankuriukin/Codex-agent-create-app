@@ -1,6 +1,6 @@
-import { useCallback } from "react";
-import { useRegisterMutation } from "@shared/api/graphql";
-import { useAuthStore } from "@entities/auth";
+import { useAuthStore } from '@entities/auth';
+import { useRegisterMutation } from '@shared/api/graphql';
+import { useCallback } from 'react';
 
 type RegisterPayload = {
   email: string;
@@ -16,17 +16,17 @@ export function useRegisterStore() {
     async ({ email, password, name }: RegisterPayload) => {
       const result = await registerMutation({
         variables: { email, password, name },
-        fetchPolicy: "no-cache",
+        fetchPolicy: 'no-cache',
       });
 
       const nextUser = result.data?.register?.user ?? null;
       if (!nextUser) {
-        throw new Error("Registration failed");
+        throw new Error('Registration failed');
       }
 
       setUser(nextUser);
     },
-    [registerMutation, setUser]
+    [registerMutation, setUser],
   );
 
   return { register };

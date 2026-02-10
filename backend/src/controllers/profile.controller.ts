@@ -1,20 +1,21 @@
-import type { Request, Response } from "express";
-import { prisma } from "../db/prisma.js";
-import { readAccessUserId, toAuthUser } from "../auth/service.js";
+import type { Request, Response } from 'express';
+import { prisma } from '../db/prisma.js';
+import { readAccessUserId, toAuthUser } from '../auth/service.js';
 
 export async function updateProfile(req: Request, res: Response) {
   const userId = readAccessUserId(req);
   if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { firstName, lastName, middleName, description, birthDate } = req.body as {
-    firstName?: string;
-    lastName?: string;
-    middleName?: string;
-    description?: string;
-    birthDate?: string;
-  };
+  const { firstName, lastName, middleName, description, birthDate } =
+    req.body as {
+      firstName?: string;
+      lastName?: string;
+      middleName?: string;
+      description?: string;
+      birthDate?: string;
+    };
 
   const updated = await prisma.user.update({
     where: { id: userId },
@@ -33,11 +34,11 @@ export async function updateProfile(req: Request, res: Response) {
 export async function uploadPhoto(req: Request, res: Response) {
   const userId = readAccessUserId(req);
   if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   if (!req.file) {
-    return res.status(400).json({ error: "Photo is required." });
+    return res.status(400).json({ error: 'Photo is required.' });
   }
 
   const photoUrl = `/uploads/${req.file.filename}`;
@@ -52,7 +53,7 @@ export async function uploadPhoto(req: Request, res: Response) {
 export async function deletePhoto(req: Request, res: Response) {
   const userId = readAccessUserId(req);
   if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const updated = await prisma.user.update({

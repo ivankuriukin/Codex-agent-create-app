@@ -1,12 +1,22 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { AuthStoreContext, type AuthContextValue, type AuthUser } from "@entities/auth";
+import {
+  type AuthContextValue,
+  AuthStoreContext,
+  type AuthUser,
+} from '@entities/auth';
 import {
   useLoginMutation,
   useLogoutMutation,
   useMeQuery,
   useRefreshMutation,
-} from "@shared/api/graphql";
-import { AUTH_UNAUTHORIZED_EVENT } from "@shared/lib/auth-events";
+} from '@shared/api/graphql';
+import { AUTH_UNAUTHORIZED_EVENT } from '@shared/lib/auth-events';
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -16,24 +26,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isAuthResolved, setIsAuthResolved] = useState(false);
   const isAuthenticated = Boolean(user);
-  const { data: meData, loading: meLoading } = useMeQuery({ fetchPolicy: "no-cache" });
+  const { data: meData, loading: meLoading } = useMeQuery({
+    fetchPolicy: 'no-cache',
+  });
   const [loginMutation] = useLoginMutation();
   const [refreshMutation] = useRefreshMutation();
   const [logoutMutation] = useLogoutMutation();
 
-  const login = useCallback(async ({ email, password }: { email: string; password: string }) => {
-    const result = await loginMutation({
-      variables: { email, password },
-      fetchPolicy: "no-cache",
-    });
+  const login = useCallback(
+    async ({ email, password }: { email: string; password: string }) => {
+      const result = await loginMutation({
+        variables: { email, password },
+        fetchPolicy: 'no-cache',
+      });
 
-    const nextUser = result.data?.login?.user ?? null;
-    if (!nextUser) {
-      throw new Error("Login failed");
-    }
+      const nextUser = result.data?.login?.user ?? null;
+      if (!nextUser) {
+        throw new Error('Login failed');
+      }
 
-    setUser(nextUser);
-  }, [loginMutation]);
+      setUser(nextUser);
+    },
+    [loginMutation],
+  );
 
   const setAuthUser = useCallback((nextUser: AuthUser | null) => {
     setUser(nextUser);
@@ -41,7 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const refresh = useCallback(async () => {
     try {
-      const result = await refreshMutation({ fetchPolicy: "no-cache" });
+      const result = await refreshMutation({ fetchPolicy: 'no-cache' });
       const nextUser = result.data?.refresh?.user ?? null;
       setUser(nextUser);
     } catch {
@@ -51,7 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = useCallback(async () => {
     try {
-      await logoutMutation({ fetchPolicy: "no-cache" });
+      await logoutMutation({ fetchPolicy: 'no-cache' });
     } catch {
       // Ignore logout errors to keep client state consistent.
     }
@@ -73,7 +88,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(null);
     };
 
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
     window.addEventListener(AUTH_UNAUTHORIZED_EVENT, handleUnauthorized);
     return () => {
       window.removeEventListener(AUTH_UNAUTHORIZED_EVENT, handleUnauthorized);
@@ -90,8 +105,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
       logout,
       refresh,
     }),
-    [user, isAuthenticated, isAuthResolved, setAuthUser, login, logout, refresh]
+    [
+      user,
+      isAuthenticated,
+      isAuthResolved,
+      setAuthUser,
+      login,
+      logout,
+      refresh,
+    ],
   );
 
-  return <AuthStoreContext.Provider value={value}>{children}</AuthStoreContext.Provider>;
+  return (
+    <AuthStoreContext.Provider value={value}>
+      {children}
+    </AuthStoreContext.Provider>
+  );
 }

@@ -1,4 +1,13 @@
 import {
+  DeleteOutlined,
+  UploadOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { apiBaseUrl } from '@config/env';
+import type { AuthUser } from '@entities/auth';
+import { useProfileStore } from '@pages/profile/model/useProfileStore';
+import { useProfileStyles } from '@pages/profile/profile.styles';
+import {
   Avatar,
   Button,
   Card,
@@ -7,12 +16,7 @@ import {
   Tooltip,
   Typography,
   Upload,
-} from "antd";
-import { DeleteOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
-import { apiBaseUrl } from "@config/env";
-import { useProfileStore } from "@pages/profile/model/useProfileStore";
-import { useProfileStyles } from "@pages/profile/profile.styles";
-import type { AuthUser } from "@entities/auth";
+} from 'antd';
 
 type ProfilePhotoCardProps = {
   user: AuthUser;
@@ -23,7 +27,10 @@ export function ProfilePhotoCard({ user }: ProfilePhotoCardProps) {
   const { styles } = useProfileStyles();
 
   const { email, name, firstName, lastName, middleName, photoUrl } = user;
-  const displayName = [lastName, firstName, middleName].filter(Boolean).join(" ").trim();
+  const displayName = [lastName, firstName, middleName]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
   const avatarSrc = photoUrl ? `${apiBaseUrl}${photoUrl}` : undefined;
 
   const handlePhotoUpload = async (file?: File) => {
@@ -39,7 +46,11 @@ export function ProfilePhotoCard({ user }: ProfilePhotoCardProps) {
     <Card className={styles.photoCard} title="Profile photo">
       <div className={styles.photoBox}>
         {avatarSrc ? (
-          <Image className={styles.photoImage} src={avatarSrc} preview={false} />
+          <Image
+            className={styles.photoImage}
+            src={avatarSrc}
+            preview={false}
+          />
         ) : (
           <div className={styles.photoPlaceholder}>
             <Avatar size={64} icon={<UserOutlined />} />
@@ -73,7 +84,7 @@ export function ProfilePhotoCard({ user }: ProfilePhotoCardProps) {
         </div>
       </div>
       <Flex vertical gap="small">
-        <Typography.Text strong>{displayName || name || "—"}</Typography.Text>
+        <Typography.Text strong>{displayName || name || '—'}</Typography.Text>
         <Typography.Text type="secondary">{email}</Typography.Text>
       </Flex>
     </Card>

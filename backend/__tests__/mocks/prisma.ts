@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { jest } from '@jest/globals';
 
 export type User = {
   id: string;
@@ -17,7 +17,9 @@ export type User = {
 };
 
 type FindUniqueArgs = { where: { id?: string; email?: string } };
-type CreateArgs = { data: { email: string; name?: string | null; passwordHash: string } };
+type CreateArgs = {
+  data: { email: string; name?: string | null; passwordHash: string };
+};
 type UpdateArgs = { where: { id: string }; data: Partial<User> };
 
 let userIdCounter = 1;
@@ -60,7 +62,7 @@ export const prismaMock = {
     update: jest.fn(async ({ where, data }: UpdateArgs) => {
       const user = users.get(where.id);
       if (!user) {
-        throw new Error("User not found");
+        throw new Error('User not found');
       }
       Object.assign(user, data, { updatedAt: new Date() });
       users.set(where.id, user);

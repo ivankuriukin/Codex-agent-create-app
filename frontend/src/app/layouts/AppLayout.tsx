@@ -1,10 +1,10 @@
-import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Layout, Button, Typography, Flex, Avatar, Drawer, Grid } from "antd";
-import { MenuOutlined, UserOutlined } from "@ant-design/icons";
-import { SidebarAuthMenu, SidebarNav } from "@app/layouts/SidebarNav";
-import { useAppLayoutStyles } from "@app/layouts/app-layout.styles";
-import { AuthSwitch, useAuthStore } from "@entities/auth";
-import { useEffect, useRef, useState } from "react";
+import { MenuOutlined, UserOutlined } from '@ant-design/icons';
+import { useAppLayoutStyles } from '@app/layouts/app-layout.styles';
+import { SidebarAuthMenu, SidebarNav } from '@app/layouts/SidebarNav';
+import { AuthSwitch, useAuthStore } from '@entities/auth';
+import { Outlet, useNavigate, useRouterState } from '@tanstack/react-router';
+import { Avatar, Button, Drawer, Flex, Grid, Layout, Typography } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 
 const { Header, Sider, Content, Footer } = Layout;
 const { useBreakpoint } = Grid;
@@ -22,29 +22,43 @@ export function AppLayout() {
   });
   const pathname = location.pathname;
   const searchValue =
-    typeof location.search === "string"
+    typeof location.search === 'string'
       ? location.search
-      : new URLSearchParams(location.search as Record<string, string>).toString();
-  const redirectPath = `${pathname}${searchValue ? `?${searchValue}` : ""}`;
+      : new URLSearchParams(
+          location.search as Record<string, string>,
+        ).toString();
+  const redirectPath = `${pathname}${searchValue ? `?${searchValue}` : ''}`;
 
   useEffect(() => {
     if (!authStore.isAuthResolved) {
       return;
     }
 
-    if (wasAuthenticated.current && !authStore.isAuthenticated && pathname !== "/auth") {
-      navigate({ to: "/auth", search: { redirect: redirectPath } });
+    if (
+      wasAuthenticated.current &&
+      !authStore.isAuthenticated &&
+      pathname !== '/auth'
+    ) {
+      navigate({ to: '/auth', search: { redirect: redirectPath } });
     }
 
     wasAuthenticated.current = authStore.isAuthenticated;
-  }, [authStore.isAuthResolved, authStore.isAuthenticated, navigate, pathname, redirectPath]);
+  }, [
+    authStore.isAuthResolved,
+    authStore.isAuthenticated,
+    navigate,
+    pathname,
+    redirectPath,
+  ]);
 
   return (
     <Layout className={styles.root}>
       <Header className={styles.header}>
         <Flex align="center" justify="space-between" gap="large">
           <Flex align="center" gap="middle">
-            <Avatar shape="square" size={36}>E</Avatar>
+            <Avatar shape="square" size={36}>
+              E
+            </Avatar>
             <Typography.Text strong>EMBER UI</Typography.Text>
           </Flex>
           <div className={styles.headerActions}>
@@ -63,12 +77,15 @@ export function AppLayout() {
         {!isMobile && (
           <Sider width={240} className={styles.sider}>
             <Flex vertical className={styles.siderContent}>
-              <SidebarNav pathname={pathname} onNavigate={(to) => navigate({ to })} />
+              <SidebarNav
+                pathname={pathname}
+                onNavigate={(to) => navigate({ to })}
+              />
               <SidebarAuthMenu
                 pathname={pathname}
                 isAuthenticated={authStore.isAuthenticated}
                 onNavigate={(to) => {
-                  if (to === "/auth") {
+                  if (to === '/auth') {
                     navigate({ to, search: { redirect: redirectPath } });
                     return;
                   }
@@ -116,7 +133,7 @@ export function AppLayout() {
                 icon={<UserOutlined />}
                 onClick={() => {
                   setIsDrawerOpen(false);
-                  navigate({ to: "/profile" });
+                  navigate({ to: '/profile' });
                 }}
               >
                 Profile
@@ -128,7 +145,7 @@ export function AppLayout() {
                 icon={<UserOutlined />}
                 onClick={() => {
                   setIsDrawerOpen(false);
-                  navigate({ to: "/auth", search: { redirect: redirectPath } });
+                  navigate({ to: '/auth', search: { redirect: redirectPath } });
                 }}
               >
                 Sign in

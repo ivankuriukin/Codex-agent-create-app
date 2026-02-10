@@ -1,10 +1,10 @@
-import { useCallback } from "react";
-import { useAuthStore } from "@entities/auth";
+import { useAuthStore } from '@entities/auth';
 import {
   useDeleteProfilePhotoMutation,
   useUpdateProfileMutation,
   useUploadProfilePhotoMutation,
-} from "@shared/api/graphql";
+} from '@shared/api/graphql';
+import { useCallback } from 'react';
 
 type ProfilePayload = {
   firstName?: string;
@@ -24,14 +24,14 @@ export function useProfileStore() {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
-        if (typeof reader.result !== "string") {
-          reject(new Error("Failed to read file"));
+        if (typeof reader.result !== 'string') {
+          reject(new Error('Failed to read file'));
           return;
         }
         resolve(reader.result);
       };
       reader.onerror = () => {
-        reject(new Error("Failed to read file"));
+        reject(new Error('Failed to read file'));
       };
       reader.readAsDataURL(file);
     });
@@ -41,17 +41,17 @@ export function useProfileStore() {
     async (payload: ProfilePayload) => {
       const result = await updateProfileMutation({
         variables: { input: payload },
-        fetchPolicy: "no-cache",
+        fetchPolicy: 'no-cache',
       });
 
       const nextUser = result.data?.updateProfile?.user ?? null;
       if (!nextUser) {
-        throw new Error("Profile update failed");
+        throw new Error('Profile update failed');
       }
 
       setUser(nextUser);
     },
-    [setUser, updateProfileMutation]
+    [setUser, updateProfileMutation],
   );
 
   const uploadPhoto = useCallback(
@@ -59,27 +59,27 @@ export function useProfileStore() {
       const base64 = await readFileAsBase64(photoFile);
       const result = await uploadProfilePhotoMutation({
         variables: { input: { fileName: photoFile.name, base64 } },
-        fetchPolicy: "no-cache",
+        fetchPolicy: 'no-cache',
       });
 
       const nextUser = result.data?.uploadProfilePhoto?.user ?? null;
       if (!nextUser) {
-        throw new Error("Photo upload failed");
+        throw new Error('Photo upload failed');
       }
 
       setUser(nextUser);
     },
-    [readFileAsBase64, setUser, uploadProfilePhotoMutation]
+    [readFileAsBase64, setUser, uploadProfilePhotoMutation],
   );
 
   const deletePhoto = useCallback(async () => {
     const result = await deleteProfilePhotoMutation({
-      fetchPolicy: "no-cache",
+      fetchPolicy: 'no-cache',
     });
 
     const nextUser = result.data?.deleteProfilePhoto?.user ?? null;
     if (!nextUser) {
-      throw new Error("Photo delete failed");
+      throw new Error('Photo delete failed');
     }
 
     setUser(nextUser);

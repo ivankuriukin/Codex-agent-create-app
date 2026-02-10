@@ -1,6 +1,6 @@
-import { type ReactNode, useRef } from "react";
-import { useDisclosure } from "react-aria";
-import { useDisclosureState } from "react-stately";
+import { type ReactNode, useRef } from 'react';
+import { useDisclosure } from 'react-aria';
+import { useDisclosureState } from 'react-stately';
 
 type CollapserProps = {
   title: ReactNode;

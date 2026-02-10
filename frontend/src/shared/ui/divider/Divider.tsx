@@ -1,15 +1,12 @@
-import { type HTMLAttributes } from "react";
+import { type HTMLAttributes } from 'react';
 
 type DividerProps = HTMLAttributes<HTMLHRElement> & {
-  orientation?: "horizontal" | "vertical";
+  orientation?: 'horizontal' | 'vertical';
 };
 
-export function Divider({ orientation = "horizontal", ...props }: DividerProps) {
-  return (
-    <hr
-      {...props}
-      role="separator"
-      aria-orientation={orientation}
-    />
-  );
+export function Divider({
+  orientation = 'horizontal',
+  ...props
+}: DividerProps) {
+  return <hr {...props} role="separator" aria-orientation={orientation} />;
 }

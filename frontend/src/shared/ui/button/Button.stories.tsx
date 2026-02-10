@@ -138,79 +138,44 @@ export const States: Story = {
             </tr>
           </thead>
           <tbody>
-            {variants.map((variant) => (
-              <tr key={variant}>
-                <td>{variant}</td>
-                <td>
+            {variants.map((variant) => {
+              const renderButton = (
+                className: string,
+                extraProps?: Record<string, unknown>,
+              ) =>
+                variant === 'link' ? (
                   <Button
-                    className="btn-sim"
-                    variant={variant}
-                    href={
-                      variant === 'link' ? 'https://example.com' : undefined
-                    }
+                    className={className}
+                    variant="link"
+                    href="https://example.com"
+                    {...extraProps}
                   >
                     Button
                   </Button>
-                </td>
-                <td>
+                ) : (
                   <Button
-                    className="btn-sim btn-hover"
+                    className={className}
                     variant={variant}
-                    href={
-                      variant === 'link' ? 'https://example.com' : undefined
-                    }
+                    {...extraProps}
                   >
                     Button
                   </Button>
-                </td>
-                <td>
-                  <Button
-                    className="btn-sim btn-active"
-                    variant={variant}
-                    href={
-                      variant === 'link' ? 'https://example.com' : undefined
-                    }
-                  >
-                    Button
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    className="btn-sim btn-focus"
-                    variant={variant}
-                    href={
-                      variant === 'link' ? 'https://example.com' : undefined
-                    }
-                  >
-                    Button
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    className="btn-sim btn-disabled"
-                    variant={variant}
-                    href={
-                      variant === 'link' ? 'https://example.com' : undefined
-                    }
-                    isDisabled
-                  >
-                    Button
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    className="btn-sim"
-                    variant={variant}
-                    href={
-                      variant === 'link' ? 'https://example.com' : undefined
-                    }
-                    loading
-                  >
-                    Button
-                  </Button>
-                </td>
-              </tr>
-            ))}
+                );
+
+              return (
+                <tr key={variant}>
+                  <td>{variant}</td>
+                  <td>{renderButton('btn-sim')}</td>
+                  <td>{renderButton('btn-sim btn-hover')}</td>
+                  <td>{renderButton('btn-sim btn-active')}</td>
+                  <td>{renderButton('btn-sim btn-focus')}</td>
+                  <td>
+                    {renderButton('btn-sim btn-disabled', { isDisabled: true })}
+                  </td>
+                  <td>{renderButton('btn-sim', { loading: true })}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </section>

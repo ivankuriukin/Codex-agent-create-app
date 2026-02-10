@@ -1,4 +1,4 @@
-import { AppProviders } from "@app/providers/AppProviders";
+import { AppProviders } from '@app/providers/AppProviders';
 
 export function App() {
   return <AppProviders />;

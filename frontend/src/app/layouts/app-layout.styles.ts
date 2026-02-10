@@ -1,9 +1,9 @@
-import { createStyles } from "antd-style";
+import { createStyles } from 'antd-style';
 
 export const useAppLayoutStyles = createStyles(({ token }) => ({
   root: {
-    height: "100vh",
-    overflow: "hidden",
+    height: '100vh',
+    overflow: 'hidden',
   },
   main: {
     flex: 1,
@@ -13,61 +13,61 @@ export const useAppLayoutStyles = createStyles(({ token }) => ({
     padding: token.padding,
   },
   headerActions: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     gap: token.marginSM,
   },
   sider: {
     padding: token.padding,
     margin: token.padding,
     borderRadius: token.borderRadiusLG,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   siderContent: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   nav: {
-    background: "transparent",
+    background: 'transparent',
     borderInlineEnd: 0,
-    "&.ant-menu-inline": {
+    '&.ant-menu-inline': {
       borderInlineEnd: 0,
     },
-    "&.ant-menu": {
+    '&.ant-menu': {
       borderInlineEnd: 0,
-      "--ant-menu-active-bar-border-width": "0px",
+      '--ant-menu-active-bar-border-width': '0px',
     },
-    "& .ant-menu-item::after": {
+    '& .ant-menu-item::after': {
       borderInlineEnd: 0,
     },
   },
   authMenu: {
-    background: "transparent",
+    background: 'transparent',
     borderInlineEnd: 0,
-    "&.ant-menu-inline": {
+    '&.ant-menu-inline': {
       borderInlineEnd: 0,
     },
   },
   content: {
     padding: token.padding,
-    overflow: "auto",
+    overflow: 'auto',
   },
   contentInner: {
-    minHeight: "100%",
+    minHeight: '100%',
   },
   footer: {
     padding: token.padding,
   },
   drawerBody: {
     padding: token.padding,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     gap: token.marginSM,
   },
   drawer: {
-    "& .ant-drawer-body": {
+    '& .ant-drawer-body': {
       padding: 0,
     },
   },

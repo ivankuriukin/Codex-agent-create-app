@@ -1,9 +1,9 @@
-import { Button, Card, Typography, Flex, Form, Input, App } from "antd";
-import { useAuthStore } from "@entities/auth";
-import { useAuthStyles } from "@pages/auth/auth.styles";
-import { Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
-import { TelegramLoginButton } from "@shared/ui";
-import { telegramBotId } from "@config/env";
+import { telegramBotId } from '@config/env';
+import { useAuthStore } from '@entities/auth';
+import { useAuthStyles } from '@pages/auth/auth.styles';
+import { TelegramLoginButton } from '@shared/ui';
+import { Navigate, useNavigate, useRouterState } from '@tanstack/react-router';
+import { App, Button, Card, Flex, Form, Input, Typography } from 'antd';
 
 export function AuthPage() {
   const authStore = useAuthStore();
@@ -13,12 +13,14 @@ export function AuthPage() {
   const { message } = App.useApp();
   const location = useRouterState({ select: (state) => state.location });
   const searchValue =
-    typeof location.search === "string"
+    typeof location.search === 'string'
       ? location.search
-      : new URLSearchParams(location.search as Record<string, string>).toString();
+      : new URLSearchParams(
+          location.search as Record<string, string>,
+        ).toString();
   const searchParams = new URLSearchParams(searchValue);
-  const redirectParam = searchParams.get("redirect");
-  const redirectTarget = redirectParam || "/";
+  const redirectParam = searchParams.get('redirect');
+  const redirectTarget = redirectParam || '/';
 
   if (authStore.isAuthenticated) {
     return <Navigate to={redirectTarget} />;
@@ -35,7 +37,7 @@ export function AuthPage() {
               await authStore.login(values);
               navigate({ to: redirectTarget });
             } catch {
-              message.error("Invalid credentials.");
+              message.error('Invalid credentials.');
             }
           }}
           requiredMark="optional"
@@ -43,7 +45,7 @@ export function AuthPage() {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, type: "email" }]}
+            rules={[{ required: true, type: 'email' }]}
           >
             <Input placeholder="demo@demo.com" />
           </Form.Item>
@@ -59,7 +61,7 @@ export function AuthPage() {
               type="link"
               onClick={() =>
                 navigate({
-                  to: "/register",
+                  to: '/register',
                   search: { redirect: redirectTarget } as { redirect?: string },
                 })
               }
@@ -78,7 +80,9 @@ export function AuthPage() {
         )}
         {telegramBotId ? (
           <Flex vertical gap="small">
-            <Typography.Text type="secondary">Or sign in with Telegram</Typography.Text>
+            <Typography.Text type="secondary">
+              Or sign in with Telegram
+            </Typography.Text>
             <TelegramLoginButton redirectPath={redirectTarget} />
           </Flex>
         ) : null}

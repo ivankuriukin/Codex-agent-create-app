@@ -1,8 +1,8 @@
-import { Button, Card, Flex, Form, Input, Typography } from "antd";
-import { useAuthStore } from "@entities/auth";
-import { useAuthStyles } from "@pages/auth/auth.styles";
-import { Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useRegisterStore } from "@pages/register/model/useRegisterStore";
+import { useAuthStore } from '@entities/auth';
+import { useAuthStyles } from '@pages/auth/auth.styles';
+import { useRegisterStore } from '@pages/register/model/useRegisterStore';
+import { Navigate, useNavigate, useRouterState } from '@tanstack/react-router';
+import { Button, Card, Flex, Form, Input, Typography } from 'antd';
 
 export function RegisterPage() {
   const authStore = useAuthStore();
@@ -12,12 +12,14 @@ export function RegisterPage() {
   const registerStore = useRegisterStore();
   const location = useRouterState({ select: (state) => state.location });
   const searchValue =
-    typeof location.search === "string"
+    typeof location.search === 'string'
       ? location.search
-      : new URLSearchParams(location.search as Record<string, string>).toString();
+      : new URLSearchParams(
+          location.search as Record<string, string>,
+        ).toString();
   const searchParams = new URLSearchParams(searchValue);
-  const redirectParam = searchParams.get("redirect");
-  const redirectTarget = redirectParam || "/";
+  const redirectParam = searchParams.get('redirect');
+  const redirectTarget = redirectParam || '/';
 
   if (authStore.isAuthenticated) {
     return <Navigate to={redirectTarget} />;
@@ -35,17 +37,13 @@ export function RegisterPage() {
           }}
           requiredMark="optional"
         >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input placeholder="John Doe" />
           </Form.Item>
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, type: "email" }]}
+            rules={[{ required: true, type: 'email' }]}
           >
             <Input placeholder="demo@demo.com" />
           </Form.Item>
@@ -61,7 +59,7 @@ export function RegisterPage() {
               type="link"
               onClick={() =>
                 navigate({
-                  to: "/auth",
+                  to: '/auth',
                   search: { redirect: redirectTarget } as { redirect?: string },
                 })
               }

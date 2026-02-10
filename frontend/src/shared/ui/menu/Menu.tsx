@@ -1,4 +1,4 @@
-import type { Node } from '@react-types/shared';
+import type { Key, Node } from '@react-types/shared';
 import { type ReactNode, useRef } from 'react';
 import {
   DismissButton,
@@ -20,7 +20,7 @@ type MenuItemData = {
 type MenuProps = {
   triggerLabel: ReactNode;
   items: MenuItemData[];
-  onAction?: (key: string) => void;
+  onAction?: (key: Key) => void;
   className?: string;
   triggerClassName?: string;
   listClassName?: string;
@@ -40,7 +40,7 @@ export function Menu({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const { menuTriggerProps, menuProps } = useMenuTrigger({}, state, triggerRef);
   const { buttonProps } = useButton(menuTriggerProps, triggerRef);
-  const menuState = useTreeState({
+  const menuState = useTreeState<MenuItemData>({
     selectionMode: 'none',
     items,
     children: (item) => <Item key={item.id}>{item.label}</Item>,
@@ -68,7 +68,7 @@ export function Menu({
 
 type MenuPopoverProps = {
   state: ReturnType<typeof useMenuTriggerState>;
-  triggerRef: React.RefObject<Element>;
+  triggerRef: React.RefObject<Element | null>;
   children: ReactNode;
 };
 
@@ -79,7 +79,7 @@ function MenuPopover({ state, triggerRef, children }: MenuPopoverProps) {
     ref,
   );
   const { overlayProps: positionProps } = useOverlayPosition({
-    targetRef: triggerRef,
+    targetRef: triggerRef as React.RefObject<Element>,
     overlayRef: ref,
     placement: 'bottom start',
     offset: 8,
@@ -97,7 +97,7 @@ function MenuPopover({ state, triggerRef, children }: MenuPopoverProps) {
 
 type MenuListProps = {
   state: ReturnType<typeof useTreeState>;
-  onAction?: (key: string) => void;
+  onAction?: (key: Key) => void;
   className?: string;
   itemClassName?: string;
 } & Parameters<typeof useMenu>[0];
@@ -118,6 +118,7 @@ function MenuList({
         <MenuItem
           key={item.key}
           item={item}
+          state={state}
           onAction={onAction}
           className={itemClassName}
         />
@@ -127,19 +128,21 @@ function MenuList({
 }
 
 type MenuItemProps = {
-  item: Node<MenuItemData>;
-  onAction?: (key: string) => void;
+  item: Node<unknown>;
+  state: ReturnType<typeof useTreeState>;
+  onAction?: (key: Key) => void;
   className?: string;
 };
 
-function MenuItem({ item, onAction, className }: MenuItemProps) {
+function MenuItem({ item, state, onAction, className }: MenuItemProps) {
   const ref = useRef<HTMLLIElement>(null);
   const { menuItemProps, isDisabled, isFocused } = useMenuItem(
     {
       key: item.key,
       isDisabled: item.props?.isDisabled,
-      onAction: (key) => onAction?.(String(key)),
+      onAction,
     },
+    state,
     ref,
   );
 

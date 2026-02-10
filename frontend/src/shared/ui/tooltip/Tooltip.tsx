@@ -1,23 +1,26 @@
-import { type ReactNode, type RefObject, useRef } from "react";
+import {
+  type HTMLAttributes,
+  type ReactNode,
+  type RefObject,
+  useRef,
+} from 'react';
 import {
   OverlayContainer,
   useOverlayPosition,
   useTooltip,
   useTooltipTrigger,
-} from "react-aria";
-import { useTooltipTriggerState } from "react-stately";
+} from 'react-aria';
+import { useTooltipTriggerState } from 'react-stately';
 
 type TooltipProps = {
   children: ReactNode;
   className?: string;
+  tooltipProps?: HTMLAttributes<HTMLDivElement>;
 };
 
-export function Tooltip({ children, className }: TooltipProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { tooltipProps } = useTooltip({}, ref);
-
+export function Tooltip({ children, className, tooltipProps }: TooltipProps) {
   return (
-    <div {...tooltipProps} ref={ref} className={className}>
+    <div {...tooltipProps} className={className}>
       {children}
     </div>
   );
@@ -30,15 +33,25 @@ type TooltipTriggerProps = {
   tooltipClassName?: string;
 };
 
-export function TooltipTrigger({ children, tooltip, className, tooltipClassName }: TooltipTriggerProps) {
+export function TooltipTrigger({
+  children,
+  tooltip,
+  className,
+  tooltipClassName,
+}: TooltipTriggerProps) {
   const state = useTooltipTriggerState({ delay: 0 });
   const triggerRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const { triggerProps, tooltipProps } = useTooltipTrigger({}, state, triggerRef);
+  const { triggerProps, tooltipProps } = useTooltipTrigger(
+    {},
+    state,
+    triggerRef,
+  );
+  const { tooltipProps: ariaTooltipProps } = useTooltip({}, state);
   const { overlayProps } = useOverlayPosition({
     targetRef: triggerRef,
     overlayRef,
-    placement: "top",
+    placement: 'top',
     offset: 8,
     isOpen: state.isOpen,
   });
@@ -50,8 +63,14 @@ export function TooltipTrigger({ children, tooltip, className, tooltipClassName 
       </span>
       {state.isOpen ? (
         <OverlayContainer>
-          <div {...overlayProps} {...tooltipProps} ref={overlayRef} className={tooltipClassName}>
-            {tooltip}
+          <div
+            {...overlayProps}
+            {...tooltipProps}
+            {...ariaTooltipProps}
+            ref={overlayRef}
+            className={tooltipClassName}
+          >
+            <Tooltip>{tooltip}</Tooltip>
           </div>
         </OverlayContainer>
       ) : null}

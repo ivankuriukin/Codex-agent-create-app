@@ -1,9 +1,10 @@
-import type { AuthUser } from "../auth/types.js";
-import { authResolvers } from "../auth/resolvers.js";
+import type { AuthUser } from '../auth/types.js';
+import { authResolvers } from '../auth/resolvers.js';
 
 export const resolvers = {
   Query: {
-    me: (_: unknown, __: unknown, context: { user: AuthUser | null }) => context.user,
+    me: (_: unknown, __: unknown, context: { user: AuthUser | null }) =>
+      context.user,
   },
   Mutation: {
     register: authResolvers.register,

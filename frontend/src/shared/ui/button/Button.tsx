@@ -1,5 +1,5 @@
 import { useObjectRef } from '@react-aria/utils';
-import { forwardRef,type ReactElement, type ReactNode, type Ref } from 'react';
+import { forwardRef, type ReactElement, type ReactNode, type Ref } from 'react';
 import {
   type AriaButtonProps,
   mergeProps,

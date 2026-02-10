@@ -1,10 +1,10 @@
-import bcrypt from "bcryptjs";
-import type { Request, Response } from "express";
-import { authResolvers } from "../src/auth/resolvers.js";
-import { issueTokens, verifyRefreshToken } from "../src/auth/service.js";
-import { signAccessToken, signRefreshToken } from "../src/auth/tokens.js";
-import { prismaMock, resetPrismaMock } from "./mocks/prisma";
-import { redisClient, resetRedisMock } from "./mocks/redis";
+import bcrypt from 'bcryptjs';
+import type { Request, Response } from 'express';
+import { authResolvers } from '../src/auth/resolvers.js';
+import { issueTokens, verifyRefreshToken } from '../src/auth/service.js';
+import { signAccessToken, signRefreshToken } from '../src/auth/tokens.js';
+import { prismaMock, resetPrismaMock } from './mocks/prisma';
+import { redisClient, resetRedisMock } from './mocks/redis';
 
 type CookieResponse = {
   cookie: jest.Mock;
@@ -30,16 +30,16 @@ function asClearCookieResponse(res: ClearCookieResponse) {
   return res as unknown as Response;
 }
 
-describe("auth", () => {
+describe('auth', () => {
   beforeEach(() => {
     resetPrismaMock();
     resetRedisMock();
   });
 
-  test("issueTokens hashes and stores refresh token", async () => {
-    const passwordHash = await bcrypt.hash("pass", 10);
+  test('issueTokens hashes and stores refresh token', async () => {
+    const passwordHash = await bcrypt.hash('pass', 10);
     const user = await prismaMock.user.create({
-      data: { email: "a@b.com", passwordHash },
+      data: { email: 'a@b.com', passwordHash },
     });
 
     const { refreshToken } = await issueTokens(user.id);
@@ -50,48 +50,48 @@ describe("auth", () => {
     expect(matches).toBe(true);
   });
 
-  test("register creates user and sets cookies", async () => {
+  test('register creates user and sets cookies', async () => {
     const res: CookieResponse = { cookie: jest.fn() };
     const result = await authResolvers.register(
       null,
-      { email: "new@demo.com", password: "demo", name: "New" },
-      { res: asCookieResponse(res) }
+      { email: 'new@demo.com', password: 'demo', name: 'New' },
+      { res: asCookieResponse(res) },
     );
 
-    expect(result.user.email).toBe("new@demo.com");
+    expect(result.user.email).toBe('new@demo.com');
     expect(res.cookie).toHaveBeenCalledWith(
-      "access_token",
+      'access_token',
       expect.any(String),
-      expect.objectContaining({ httpOnly: true })
+      expect.objectContaining({ httpOnly: true }),
     );
     expect(res.cookie).toHaveBeenCalledWith(
-      "refresh_token",
+      'refresh_token',
       expect.any(String),
-      expect.objectContaining({ httpOnly: true })
+      expect.objectContaining({ httpOnly: true }),
     );
   });
 
-  test("login sets cookies for valid credentials", async () => {
-    const passwordHash = await bcrypt.hash("demo", 10);
+  test('login sets cookies for valid credentials', async () => {
+    const passwordHash = await bcrypt.hash('demo', 10);
     await prismaMock.user.create({
-      data: { email: "demo@demo.com", passwordHash },
+      data: { email: 'demo@demo.com', passwordHash },
     });
 
     const res: CookieResponse = { cookie: jest.fn() };
     const result = await authResolvers.login(
       null,
-      { email: "demo@demo.com", password: "demo" },
-      { res: asCookieResponse(res) }
+      { email: 'demo@demo.com', password: 'demo' },
+      { res: asCookieResponse(res) },
     );
 
-    expect(result.user.email).toBe("demo@demo.com");
+    expect(result.user.email).toBe('demo@demo.com');
     expect(res.cookie).toHaveBeenCalledTimes(2);
   });
 
-  test("refresh validates refresh token and issues new cookies", async () => {
-    const passwordHash = await bcrypt.hash("demo", 10);
+  test('refresh validates refresh token and issues new cookies', async () => {
+    const passwordHash = await bcrypt.hash('demo', 10);
     const user = await prismaMock.user.create({
-      data: { email: "demo@demo.com", passwordHash },
+      data: { email: 'demo@demo.com', passwordHash },
     });
 
     const refreshToken = signRefreshToken(user.id);
@@ -105,14 +105,14 @@ describe("auth", () => {
       res: asCookieResponse(res),
     });
 
-    expect(result.user.email).toBe("demo@demo.com");
+    expect(result.user.email).toBe('demo@demo.com');
     expect(res.cookie).toHaveBeenCalledTimes(2);
   });
 
-  test("logout clears cookies and resets refresh token hash", async () => {
-    const passwordHash = await bcrypt.hash("demo", 10);
+  test('logout clears cookies and resets refresh token hash', async () => {
+    const passwordHash = await bcrypt.hash('demo', 10);
     const user = await prismaMock.user.create({
-      data: { email: "demo@demo.com", passwordHash },
+      data: { email: 'demo@demo.com', passwordHash },
     });
 
     const accessToken = signAccessToken(user.id);
@@ -127,11 +127,15 @@ describe("auth", () => {
 
     expect(result).toBe(true);
     expect(stored).toBeNull();
-    expect(res.clearCookie).toHaveBeenCalledWith("access_token", { path: "/" });
-    expect(res.clearCookie).toHaveBeenCalledWith("refresh_token", { path: "/" });
+    expect(res.clearCookie).toHaveBeenCalledWith('access_token', { path: '/' });
+    expect(res.clearCookie).toHaveBeenCalledWith('refresh_token', {
+      path: '/',
+    });
   });
 
-  test("verifyRefreshToken throws for invalid token", async () => {
-    await expect(verifyRefreshToken("bad")).rejects.toThrow("Invalid refresh token.");
+  test('verifyRefreshToken throws for invalid token', async () => {
+    await expect(verifyRefreshToken('bad')).rejects.toThrow(
+      'Invalid refresh token.',
+    );
   });
 });

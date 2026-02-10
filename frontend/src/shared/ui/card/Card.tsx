@@ -1,6 +1,6 @@
-import { type ElementType, type ReactNode } from "react";
+import { type ElementType, type ReactNode } from 'react';
 
-type CardProps<T extends ElementType = "section"> = {
+type CardProps<T extends ElementType = 'section'> = {
   as?: T;
   header?: ReactNode;
   footer?: ReactNode;
@@ -11,7 +11,7 @@ type CardProps<T extends ElementType = "section"> = {
   footerClassName?: string;
 };
 
-export function Card<T extends ElementType = "section">({
+export function Card<T extends ElementType = 'section'>({
   as,
   header,
   footer,
@@ -21,7 +21,7 @@ export function Card<T extends ElementType = "section">({
   bodyClassName,
   footerClassName,
 }: CardProps<T>) {
-  const Component = as ?? "section";
+  const Component = as ?? 'section';
 
   return (
     <Component className={className}>

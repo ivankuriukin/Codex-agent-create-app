@@ -22,6 +22,7 @@ export default [
       'eslint.config.js',
       'jest.config.cjs',
       'postcss.config.cjs',
+      'tailwind.config.cjs',
       'vite.config.ts',
       'jest.setup.ts',
     ],

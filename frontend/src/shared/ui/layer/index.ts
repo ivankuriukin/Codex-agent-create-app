@@ -1,1 +1,1 @@
-export { Header, Footer, Main, Slider } from "./Layer";
+export { Footer, Header, Main, Slider } from './Layer';

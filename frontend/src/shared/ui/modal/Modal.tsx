@@ -1,12 +1,12 @@
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useRef } from 'react';
 import {
   DismissButton,
   FocusScope,
   OverlayContainer,
   useDialog,
   useModalOverlay,
-} from "react-aria";
-import { type OverlayTriggerState } from "react-stately";
+} from 'react-aria';
+import { type OverlayTriggerState } from 'react-stately';
 
 export type ModalProps = {
   isOpen: boolean;
@@ -31,14 +31,23 @@ export function Modal({
 
   const ref = useRef<HTMLDivElement>(null);
   const state = { isOpen, close: onClose } as OverlayTriggerState;
-  const { overlayProps, underlayProps } = useModalOverlay({ isOpen, onClose, isDismissable: true }, state, ref);
-  const { dialogProps, titleProps } = useDialog({ role: "dialog" }, ref);
+  const { modalProps, underlayProps } = useModalOverlay(
+    { isDismissable: true },
+    state,
+    ref,
+  );
+  const { dialogProps, titleProps } = useDialog({ role: 'dialog' }, ref);
 
   return (
     <OverlayContainer>
       <div {...underlayProps} className={overlayClassName}>
         <FocusScope contain restoreFocus autoFocus>
-          <div {...overlayProps} {...dialogProps} ref={ref} className={contentClassName}>
+          <div
+            {...modalProps}
+            {...dialogProps}
+            ref={ref}
+            className={contentClassName}
+          >
             <DismissButton onDismiss={onClose} />
             {title ? (
               <h2 {...titleProps} className={titleClassName}>

@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode } from 'react';
 
 type TagProps = {
   children?: ReactNode;
@@ -7,7 +7,12 @@ type TagProps = {
   removeLabel?: string;
 };
 
-export function Tag({ children, className, onRemove, removeLabel = "Remove" }: TagProps) {
+export function Tag({
+  children,
+  className,
+  onRemove,
+  removeLabel = 'Remove',
+}: TagProps) {
   return (
     <span className={className}>
       {children}

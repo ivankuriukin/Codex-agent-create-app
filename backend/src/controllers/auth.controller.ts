@@ -1,7 +1,7 @@
-import type { Request, Response } from "express";
-import bcrypt from "bcryptjs";
-import { prisma } from "../db/prisma.js";
-import { issueTokens, setAuthCookies, toAuthUser } from "../auth/service.js";
+import type { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
+import { prisma } from '../db/prisma.js';
+import { issueTokens, setAuthCookies, toAuthUser } from '../auth/service.js';
 
 export async function register(req: Request, res: Response) {
   const { email, password, name } = req.body as {
@@ -11,12 +11,12 @@ export async function register(req: Request, res: Response) {
   };
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required." });
+    return res.status(400).json({ error: 'Email and password are required.' });
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    return res.status(409).json({ error: "User already exists." });
+    return res.status(409).json({ error: 'User already exists.' });
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -34,17 +34,17 @@ export async function login(req: Request, res: Response) {
   const { email, password } = req.body as { email?: string; password?: string };
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required." });
+    return res.status(400).json({ error: 'Email and password are required.' });
   }
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    return res.status(401).json({ error: "Invalid credentials." });
+    return res.status(401).json({ error: 'Invalid credentials.' });
   }
 
   const passwordValid = await bcrypt.compare(password, user.passwordHash);
   if (!passwordValid) {
-    return res.status(401).json({ error: "Invalid credentials." });
+    return res.status(401).json({ error: 'Invalid credentials.' });
   }
 
   const { accessToken, refreshToken } = await issueTokens(user.id);

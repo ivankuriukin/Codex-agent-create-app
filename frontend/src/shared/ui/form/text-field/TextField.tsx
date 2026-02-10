@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { type AriaTextFieldProps, useTextField } from "react-aria";
+import { useRef } from 'react';
+import { type AriaTextFieldProps, useTextField } from 'react-aria';
 
 type TextFieldProps = AriaTextFieldProps & {
   className?: string;
@@ -22,10 +22,8 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const ref = useRef<HTMLInputElement>(null);
-  const { labelProps, inputProps, descriptionProps, errorMessageProps } = useTextField(
-    { ...props, description, errorMessage },
-    ref
-  );
+  const { labelProps, inputProps, descriptionProps, errorMessageProps } =
+    useTextField({ ...props, description, errorMessage }, ref);
 
   return (
     <div className={className}>

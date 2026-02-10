@@ -1,5 +1,5 @@
-import { Component, type ReactNode } from "react";
-import { Result } from "antd";
+import { Result } from 'antd';
+import { Component, type ReactNode } from 'react';
 
 type ErrorBoundaryProps = {
   children: ReactNode;
@@ -10,7 +10,10 @@ type ErrorBoundaryState = {
   hasError: boolean;
 };
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   state: ErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError() {

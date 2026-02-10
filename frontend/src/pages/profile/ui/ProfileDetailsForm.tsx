@@ -1,10 +1,10 @@
-import { Button, Card, DatePicker, Form, Input, Typography } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
-import { useEffect, useMemo, useState } from "react";
-import dayjs, { type Dayjs } from "dayjs";
-import { useProfileStore } from "@pages/profile/model/useProfileStore";
-import { useProfileStyles } from "@pages/profile/profile.styles";
-import type { AuthUser } from "@entities/auth";
+import { CheckOutlined } from '@ant-design/icons';
+import type { AuthUser } from '@entities/auth';
+import { useProfileStore } from '@pages/profile/model/useProfileStore';
+import { useProfileStyles } from '@pages/profile/profile.styles';
+import { Button, Card, DatePicker, Form, Input, Typography } from 'antd';
+import dayjs, { type Dayjs } from 'dayjs';
+import { useEffect, useMemo, useState } from 'react';
 
 type ProfileDetailsFormProps = {
   user: AuthUser;
@@ -14,7 +14,7 @@ export function ProfileDetailsForm({ user }: ProfileDetailsFormProps) {
   const profileStore = useProfileStore();
   const [form] = Form.useForm();
   const [isDirty, setIsDirty] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "success">("idle");
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'success'>('idle');
   const { styles } = useProfileStyles();
 
   const birthDateValue = useMemo(() => {
@@ -26,10 +26,10 @@ export function ProfileDetailsForm({ user }: ProfileDetailsFormProps) {
   useEffect(() => {
     const { firstName, lastName, middleName, description } = user;
     form.setFieldsValue({
-      firstName: firstName ?? "",
-      lastName: lastName ?? "",
-      middleName: middleName ?? "",
-      description: description ?? "",
+      firstName: firstName ?? '',
+      lastName: lastName ?? '',
+      middleName: middleName ?? '',
+      description: description ?? '',
       birthDate: birthDateValue,
     });
     setIsDirty(false);
@@ -50,8 +50,8 @@ export function ProfileDetailsForm({ user }: ProfileDetailsFormProps) {
       birthDate: values.birthDate ? values.birthDate.toISOString() : null,
     });
     setIsDirty(false);
-    setSaveStatus("success");
-    setTimeout(() => setSaveStatus("idle"), 300);
+    setSaveStatus('success');
+    setTimeout(() => setSaveStatus('idle'), 300);
   };
 
   return (
@@ -66,10 +66,18 @@ export function ProfileDetailsForm({ user }: ProfileDetailsFormProps) {
           setIsDirty(form.isFieldsTouched(true));
         }}
       >
-        <Form.Item label="First name" name="firstName" rules={[{ required: true }]}>
+        <Form.Item
+          label="First name"
+          name="firstName"
+          rules={[{ required: true }]}
+        >
           <Input placeholder="Enter first name" />
         </Form.Item>
-        <Form.Item label="Last name" name="lastName" rules={[{ required: true }]}>
+        <Form.Item
+          label="Last name"
+          name="lastName"
+          rules={[{ required: true }]}
+        >
           <Input placeholder="Enter last name" />
         </Form.Item>
         <Form.Item label="Patronymic" name="middleName">
@@ -86,9 +94,9 @@ export function ProfileDetailsForm({ user }: ProfileDetailsFormProps) {
             type="primary"
             htmlType="submit"
             disabled={!isDirty}
-            icon={saveStatus === "success" ? <CheckOutlined /> : undefined}
+            icon={saveStatus === 'success' ? <CheckOutlined /> : undefined}
           >
-            {saveStatus === "success" ? "Saved" : "Save"}
+            {saveStatus === 'success' ? 'Saved' : 'Save'}
           </Button>
         </div>
       </Form>

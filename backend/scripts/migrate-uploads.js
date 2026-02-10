@@ -1,18 +1,18 @@
-import fs from "fs";
-import path from "path";
-import { execSync } from "child_process";
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
 
-const uploadsDir = path.join(process.cwd(), "uploads");
+const uploadsDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) {
-  console.log("No uploads directory, skipping.");
+  console.log('No uploads directory, skipping.');
   process.exit(0);
 }
 
 const mimeToExt = {
-  "image/jpeg": ".jpg",
-  "image/png": ".png",
-  "image/webp": ".webp",
-  "image/gif": ".gif",
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/webp': '.webp',
+  'image/gif': '.gif',
 };
 
 const files = fs.readdirSync(uploadsDir);
@@ -23,7 +23,7 @@ for (const file of files) {
   if (!stat.isFile()) continue;
   if (path.extname(file)) continue;
 
-  let mime = "";
+  let mime = '';
   try {
     mime = execSync(`file --mime-type -b "${full}"`).toString().trim();
   } catch {

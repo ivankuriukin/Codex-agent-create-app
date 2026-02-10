@@ -1,10 +1,10 @@
-import { RootRoute, Route, Router } from "@tanstack/react-router";
-import { AppLayout } from "@app/layouts/AppLayout";
-import { HomePage } from "@pages/home";
-import { AuthPage } from "@pages/auth";
-import { RegisterPage } from "@pages/register";
-import { ProfilePage } from "@pages/profile";
-import { ProtectedRoute } from "@app/providers/ProtectedRoute";
+import { AppLayout } from '@app/layouts/AppLayout';
+import { ProtectedRoute } from '@app/providers/ProtectedRoute';
+import { AuthPage } from '@pages/auth';
+import { HomePage } from '@pages/home';
+import { ProfilePage } from '@pages/profile';
+import { RegisterPage } from '@pages/register';
+import { RootRoute, Route, Router } from '@tanstack/react-router';
 
 const rootRoute = new RootRoute({
   component: () => <AppLayout />,
@@ -12,25 +12,25 @@ const rootRoute = new RootRoute({
 
 const indexRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/",
+  path: '/',
   component: () => <HomePage />,
 });
 
 const authRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/auth",
+  path: '/auth',
   component: () => <AuthPage />,
 });
 
 const registerRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/register",
+  path: '/register',
   component: () => <RegisterPage />,
 });
 
 const profileRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/profile",
+  path: '/profile',
   component: () => (
     <ProtectedRoute>
       <ProfilePage />
@@ -38,11 +38,16 @@ const profileRoute = new Route({
   ),
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, authRoute, registerRoute, profileRoute]);
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  authRoute,
+  registerRoute,
+  profileRoute,
+]);
 
 export const router = new Router({ routeTree });
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }

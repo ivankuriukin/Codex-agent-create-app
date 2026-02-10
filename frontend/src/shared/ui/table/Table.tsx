@@ -45,22 +45,18 @@ export function Table<T extends { id: string | number }>({
   cellClassName,
 }: TableProps<T>) {
   const state = useTableState({
-    children: (
-      <>
-        <TableHeader columns={columns}>
-          {(column) => <Column key={column.key}>{column.name}</Column>}
-        </TableHeader>
-        <TableBody items={items}>
-          {(item) => (
-            <Row key={String(getRowKey ? getRowKey(item) : item.id)}>
-              {(columnKey) => (
-                <Cell>{renderCell(item, String(columnKey))}</Cell>
-              )}
-            </Row>
-          )}
-        </TableBody>
-      </>
-    ),
+    children: [
+      <TableHeader key="header" columns={columns}>
+        {(column) => <Column key={column.key}>{column.name}</Column>}
+      </TableHeader>,
+      <TableBody key="body" items={items}>
+        {(item) => (
+          <Row key={String(getRowKey ? getRowKey(item) : item.id)}>
+            {(columnKey) => <Cell>{renderCell(item, String(columnKey))}</Cell>}
+          </Row>
+        )}
+      </TableBody>,
+    ],
   });
   const ref = useRef<HTMLTableElement>(null);
   const { collection } = state;

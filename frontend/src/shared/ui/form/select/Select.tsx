@@ -38,7 +38,7 @@ export function Select({
   itemClassName,
   ...props
 }: SelectProps) {
-  const state = useSelectState({
+  const state = useSelectState<SelectItem>({
     ...props,
     items,
     children: (item) => <Item key={item.id}>{item.label}</Item>,
@@ -86,7 +86,7 @@ export function Select({
 
 type PopoverProps = {
   state: ReturnType<typeof useSelectState>;
-  triggerRef: RefObject<Element>;
+  triggerRef: RefObject<Element | null>;
   children: ReactNode;
   className?: string;
 };
@@ -102,7 +102,7 @@ function Popover({ state, triggerRef, children, className }: PopoverProps) {
     ref,
   );
   const { overlayProps: positionProps } = useOverlayPosition({
-    targetRef: triggerRef,
+    targetRef: triggerRef as RefObject<Element>,
     overlayRef: ref,
     placement: 'bottom start',
     offset: 8,
@@ -126,7 +126,7 @@ type ListBoxProps = {
   state: ReturnType<typeof useSelectState>;
   className?: string;
   itemClassName?: string;
-} & AriaListBoxOptions<unknown>;
+} & AriaListBoxOptions<SelectItem>;
 
 function ListBox({ state, className, itemClassName, ...props }: ListBoxProps) {
   const ref = useRef<HTMLUListElement>(null);
@@ -147,7 +147,7 @@ function ListBox({ state, className, itemClassName, ...props }: ListBoxProps) {
 }
 
 type OptionProps = {
-  item: Node<SelectItem>;
+  item: Node<unknown>;
   state: ReturnType<typeof useSelectState>;
   className?: string;
 };

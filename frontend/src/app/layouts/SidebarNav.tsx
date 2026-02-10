@@ -1,6 +1,10 @@
-import { Menu } from "antd";
-import { DashboardOutlined, UserOutlined, LoginOutlined } from "@ant-design/icons";
-import { useAppLayoutStyles } from "@app/layouts/app-layout.styles";
+import {
+  DashboardOutlined,
+  LoginOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { useAppLayoutStyles } from '@app/layouts/app-layout.styles';
+import { Menu } from 'antd';
 
 type SidebarNavProps = {
   pathname: string;
@@ -11,8 +15,8 @@ export function SidebarNav({ pathname, onNavigate }: SidebarNavProps) {
   const { styles } = useAppLayoutStyles();
   const items = [
     {
-      key: "/",
-      label: "Dashboard",
+      key: '/',
+      label: 'Dashboard',
       icon: <DashboardOutlined />,
     },
   ];
@@ -43,15 +47,15 @@ export function SidebarAuthMenu({
   const items = isAuthenticated
     ? [
         {
-          key: "/profile",
-          label: "Profile",
+          key: '/profile',
+          label: 'Profile',
           icon: <UserOutlined />,
         },
       ]
     : [
         {
-          key: "/auth",
-          label: "Sign in",
+          key: '/auth',
+          label: 'Sign in',
           icon: <LoginOutlined />,
         },
       ];

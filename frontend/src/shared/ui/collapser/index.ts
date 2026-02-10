@@ -1,1 +1,1 @@
-export { Collapser } from "./Collapser";
+export { Collapser } from './Collapser';

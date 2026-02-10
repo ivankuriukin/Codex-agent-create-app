@@ -1,13 +1,26 @@
-import { type ReactNode, type RefObject, useRef } from "react";
-import { DismissButton, OverlayContainer, useOverlay, useOverlayPosition } from "react-aria";
+import { type ReactNode, type RefObject, useRef } from 'react';
+import {
+  DismissButton,
+  OverlayContainer,
+  useOverlay,
+  useOverlayPosition,
+} from 'react-aria';
 
 type PopoverProps = {
   isOpen: boolean;
   onClose: () => void;
-  triggerRef: RefObject<Element>;
+  triggerRef: RefObject<Element | null>;
   children: ReactNode;
   className?: string;
-  placement?: "bottom" | "top" | "start" | "end" | "bottom start" | "bottom end" | "top start" | "top end";
+  placement?:
+    | 'bottom'
+    | 'top'
+    | 'start'
+    | 'end'
+    | 'bottom start'
+    | 'bottom end'
+    | 'top start'
+    | 'top end';
   offset?: number;
 };
 
@@ -17,13 +30,16 @@ export function Popover({
   triggerRef,
   children,
   className,
-  placement = "bottom start",
+  placement = 'bottom start',
   offset = 8,
 }: PopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { overlayProps } = useOverlay({ isOpen, onClose, isDismissable: true }, ref);
+  const { overlayProps } = useOverlay(
+    { isOpen, onClose, isDismissable: true },
+    ref,
+  );
   const { overlayProps: positionProps } = useOverlayPosition({
-    targetRef: triggerRef,
+    targetRef: triggerRef as RefObject<Element>,
     overlayRef: ref,
     placement,
     offset,

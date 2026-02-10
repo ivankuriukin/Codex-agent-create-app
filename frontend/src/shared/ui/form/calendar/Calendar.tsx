@@ -19,10 +19,10 @@ import {
 import { useCalendarState } from 'react-stately';
 
 type CalendarProps = {
-  value?: DateValue;
-  defaultValue?: DateValue;
-  minValue?: DateValue;
-  maxValue?: DateValue;
+  value?: DateValue | null;
+  defaultValue?: DateValue | null;
+  minValue?: DateValue | null;
+  maxValue?: DateValue | null;
   onChange?: (value: DateValue) => void;
   className?: string;
   headerClassName?: string;
@@ -94,7 +94,6 @@ function CalendarGrid({ state, className, cellClassName }: CalendarGridProps) {
   const { gridProps, headerProps, weekDays, weeksInMonth } = useCalendarGrid(
     {},
     state,
-    ref,
   );
   const { locale } = useLocale();
   const startDate = state.visibleRange.start;

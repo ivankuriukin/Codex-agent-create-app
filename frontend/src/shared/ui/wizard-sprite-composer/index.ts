@@ -1,1 +1,1 @@
-export { WizardSpriteComposer } from "./WizardSpriteComposer";
+export { WizardSpriteComposer } from './WizardSpriteComposer';
