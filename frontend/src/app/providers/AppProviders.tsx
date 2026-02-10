@@ -4,7 +4,7 @@ import { RouterProvider } from "@app/providers/RouterProvider";
 import { App as AntApp, ConfigProvider, Result } from "antd";
 import { StyleProvider } from "antd-style";
 import { appTheme } from "@shared/theme/tokens";
-import { ErrorBoundary } from "@shared/ui/ErrorBoundary";
+import { ErrorBoundary } from "@shared/ui";
 
 export function AppProviders() {
   return (

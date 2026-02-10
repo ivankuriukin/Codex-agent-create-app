@@ -1,0 +1,1 @@
+export { WizardSpriteComposer } from "./WizardSpriteComposer";

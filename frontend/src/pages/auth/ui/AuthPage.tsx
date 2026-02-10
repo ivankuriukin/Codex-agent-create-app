@@ -2,7 +2,7 @@ import { Button, Card, Typography, Flex, Form, Input, App } from "antd";
 import { useAuthStore } from "@entities/auth";
 import { useAuthStyles } from "@pages/auth/auth.styles";
 import { Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
-import { TelegramLoginButton } from "@shared/ui/TelegramLoginButton";
+import { TelegramLoginButton } from "@shared/ui";
 import { telegramBotId } from "@config/env";
 
 export function AuthPage() {
