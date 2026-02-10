@@ -10,29 +10,32 @@ module.exports = {
         button: ['Inter', 'PT Root UI', 'system-ui', 'sans-serif'],
       },
       colors: {
-        brand: {
-          primary: {
-            dark: '#1F3D2B',
-            base: '#2F5E44',
-            hover: '#4F7F63',
-            soft: '#8FB89C',
-          },
-          secondary: {
-            accent: '#C9A24D',
-            soft: '#E6D3A3',
-          },
+        primary: {
+          base: '#2F5E44',
+          hover: '#4F7F63',
+          active: '#1F3D2B',
         },
-        ui: {
-          bg: {
-            warm: '#F6F3EE',
-            surface: '#FFFFFF',
-          },
+        secondary: {
+          base: '#C9A24D',
+          hover: '#E6D3A3',
+          active: '#B08A3C',
+        },
+        surface: {
+          base: '#FFFFFF',
+          muted: '#F6F3EE',
+          raised: '#ECE7DE',
           border: '#D8D2C8',
+        },
+        content: {
+          primary: '#243128',
+          secondary: '#6F7F73',
+          disabled: '#9CA3AF',
+          onPrimary: '#FFFFFF',
+          onSecondary: '#243128',
+        },
+        state: {
           disabled: '#CFCAC2',
-          text: {
-            primary: '#243128',
-            secondary: '#6F7F73',
-          },
+          danger: '#9B2C2C',
         },
       },
     },

@@ -1,4 +1,5 @@
 import { useObjectRef } from '@react-aria/utils';
+import classNames from 'classnames';
 import { forwardRef, type ReactElement, type ReactNode, type Ref } from 'react';
 import {
   type AriaButtonProps,
@@ -53,6 +54,68 @@ type ButtonComponent = {
   (
     props: NonLinkButtonProps & { ref?: Ref<HTMLButtonElement> },
   ): ReactElement | null;
+};
+
+const baseClassName =
+  'inline-flex items-center justify-center gap-2 border border-transparent font-button font-medium transition-colors border-gradient shadow-md';
+
+const sizeClassName: Record<ButtonSize, string> = {
+  sm: 'h-8 px-3 text-[14px] [&_[data-slot=start-icon]]:text-[14px] [&_[data-slot=end-icon]]:text-[14px]',
+  md: 'h-10 px-4 text-[14px] [&_[data-slot=start-icon]]:text-[16px] [&_[data-slot=end-icon]]:text-[16px]',
+  lg: 'h-12 px-5 text-[16px] [&_[data-slot=start-icon]]:text-[18px] [&_[data-slot=end-icon]]:text-[18px]',
+  xl: 'h-14 px-6 text-[18px] [&_[data-slot=start-icon]]:text-[20px] [&_[data-slot=end-icon]]:text-[20px]',
+  '2xl':
+    'h-16 px-7 text-[20px] [&_[data-slot=start-icon]]:text-[24px] [&_[data-slot=end-icon]]:text-[24px]',
+};
+
+const shapeClassName: Record<NonNullable<BaseButtonProps['shape']>, string> = {
+  default: 'rounded-[8px]',
+  round: 'rounded-full',
+  circle: 'rounded-full aspect-square px-0',
+};
+
+const circleSizeClassName: Record<ButtonSize, string> = {
+  sm: 'w-8',
+  md: 'w-10',
+  lg: 'w-12',
+  xl: 'w-14',
+  '2xl': 'w-16',
+};
+
+const variantClassName: Record<
+  Exclude<ButtonVariant, 'link'>,
+  { base: string; hover: string; active: string; disabled: string }
+> = {
+  default: {
+    base: 'bg-surface-base text-content-primary border-surface-border',
+    hover: 'hover:bg-surface-muted',
+    active: 'active:bg-surface-raised',
+    disabled: 'bg-state-disabled',
+  },
+  primary: {
+    base: 'bg-primary-base text-content-onPrimary border-transparent',
+    hover: 'hover:bg-primary-hover',
+    active: 'active:bg-primary-active',
+    disabled: 'bg-state-disabled',
+  },
+  secondary: {
+    base: 'bg-secondary-base text-content-onSecondary border-transparent',
+    hover: 'hover:bg-secondary-hover',
+    active: 'active:bg-secondary-active',
+    disabled: 'bg-state-disabled',
+  },
+  ghost: {
+    base: 'bg-transparent text-primary-base border-transparent',
+    hover: 'hover:bg-surface-muted',
+    active: 'active:bg-surface-raised',
+    disabled: 'text-content-disabled',
+  },
+  text: {
+    base: 'bg-transparent text-primary-base border-transparent',
+    hover: 'hover:text-primary-hover',
+    active: 'active:text-primary-active',
+    disabled: 'text-content-disabled',
+  },
 };
 
 const renderContent = (
@@ -152,7 +215,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
   ) {
     const anchorRef = useObjectRef(ref);
     const { sharedProps, content } = useButtonShared({
-      className,
+      className: classNames('text-blue-600 underline', className),
       icon,
       iconPlacement,
       loading,
@@ -197,8 +260,26 @@ const ButtonBase = forwardRef<HTMLButtonElement, NonLinkButtonProps>(
     ref,
   ) {
     const buttonRef = useObjectRef(ref);
-    const { sharedProps, content } = useButtonShared({
+    const resolvedSize = size ?? 'md';
+    const resolvedShape = shape ?? 'default';
+    const resolvedVariant = variant ?? 'default';
+    const variantStyles = variantClassName[resolvedVariant];
+    const resolvedClassName = classNames(
+      baseClassName,
+      sizeClassName[resolvedSize],
+      shapeClassName[resolvedShape],
+      resolvedShape === 'circle' ? circleSizeClassName[resolvedSize] : null,
+      variantStyles.base,
+      variantStyles.hover,
+      variantStyles.active,
+      block ? 'w-full' : null,
+      (restProps.isDisabled || loading) && variantStyles.disabled,
+      restProps.isDisabled || loading ? 'cursor-not-allowed' : null,
+      loading ? 'cursor-wait' : null,
       className,
+    );
+    const { sharedProps, content } = useButtonShared({
+      className: resolvedClassName,
       icon,
       iconPlacement,
       loading,
