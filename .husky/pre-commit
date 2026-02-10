@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 set -e
 
 echo "Typecheck: frontend"
@@ -15,6 +12,10 @@ echo "Lint: frontend"
 echo "Lint: backend"
 (cd backend && npm run lint -- --fix)
 
-echo "Format: prettier"
-npx prettier --write .
+echo "Format: prettier (frontend)"
+(cd frontend && npx prettier --write .)
+
+echo "Format: prettier (backend)"
+(cd backend && npx prettier --write .)
+
 git add -A

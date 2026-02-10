@@ -1,0 +1,7 @@
+set -e
+
+echo "Tests: frontend"
+(cd frontend && yarn test)
+
+echo "Tests: backend"
+(cd backend && npm test)
