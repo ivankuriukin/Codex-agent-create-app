@@ -1,0 +1,9 @@
+**/node_modules/
+**/dist/
+**/.venv/
+**/.venv-*/
+**/.pytest_cache/
+**/uploads/
+**/.idea/
+**/.vscode/
+**/playwright/
