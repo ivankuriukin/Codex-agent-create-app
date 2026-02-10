@@ -2,6 +2,13 @@ import type { Preview } from '@storybook/react-vite';
 import '../src/index.css';
 
 const preview: Preview = {
+  decorators: [
+    (Story) => (
+      <div className="min-h-screen bg-surface-base p-4 -m-4 text-content-primary">
+        <Story />
+      </div>
+    ),
+  ],
   parameters: {
     controls: {
       matchers: {

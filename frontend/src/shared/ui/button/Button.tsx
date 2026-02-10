@@ -57,7 +57,7 @@ type ButtonComponent = {
 };
 
 const baseClassName =
-  'inline-flex items-center justify-center gap-2 border border-transparent font-button font-medium transition-colors border-gradient shadow-md';
+  'relative inline-flex items-center justify-center gap-2 bg-surface-base font-button font-medium transition-colors shadow-md';
 
 const sizeClassName: Record<ButtonSize, string> = {
   sm: 'h-8 px-3 text-[14px] [&_[data-slot=start-icon]]:text-[14px] [&_[data-slot=end-icon]]:text-[14px]',
@@ -69,9 +69,9 @@ const sizeClassName: Record<ButtonSize, string> = {
 };
 
 const shapeClassName: Record<NonNullable<BaseButtonProps['shape']>, string> = {
-  default: 'rounded-[8px]',
-  round: 'rounded-full',
-  circle: 'rounded-full aspect-square px-0',
+  default: 'rounded-[8px] after:rounded-[7px]',
+  round: 'rounded-full after:rounded-[9999px]',
+  circle: 'rounded-full after:rounded-full aspect-square px-0',
 };
 
 const circleSizeClassName: Record<ButtonSize, string> = {
@@ -87,15 +87,15 @@ const variantClassName: Record<
   { base: string; hover: string; active: string; disabled: string }
 > = {
   default: {
-    base: 'bg-surface-base text-content-primary border-surface-border',
-    hover: 'hover:bg-surface-muted',
-    active: 'active:bg-surface-raised',
+    base: "border border-primary-active bg-gradient-to-br from-primary-hover to-primary-active text-content-onPrimary after:pointer-events-none after:absolute after:inset-0 after:rounded-[7px] after:bg-gradient-to-br after:from-white/20 after:to-transparent after:content-[''] after:p-px after:[-webkit-mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] after:[-webkit-mask-composite:xor] after:[mask-composite:exclude]",
+    hover: 'hover:from-primary-hover hover:to-primary-active',
+    active: 'active:from-primary-active active:to-primary-active',
     disabled: 'bg-state-disabled',
   },
   primary: {
-    base: 'bg-primary-base text-content-onPrimary border-transparent',
-    hover: 'hover:bg-primary-hover',
-    active: 'active:bg-primary-active',
+    base: 'bg-surface-base text-primary-base border-gradient',
+    hover: 'hover:bg-surface-muted',
+    active: 'active:bg-surface-raised',
     disabled: 'bg-state-disabled',
   },
   secondary: {
@@ -111,7 +111,7 @@ const variantClassName: Record<
     disabled: 'text-content-disabled',
   },
   text: {
-    base: 'bg-transparent text-primary-base border-transparent',
+    base: 'bg-transparent text-primary-base border-transparent shadow-none',
     hover: 'hover:text-primary-hover',
     active: 'active:text-primary-active',
     disabled: 'text-content-disabled',
@@ -215,7 +215,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
   ) {
     const anchorRef = useObjectRef(ref);
     const { sharedProps, content } = useButtonShared({
-      className: classNames('text-blue-600 underline', className),
+      className: classNames('text-blue-600 underline shadow-none', className),
       icon,
       iconPlacement,
       loading,

@@ -1,7 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
-  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{js,jsx,ts,tsx}',
+    './.storybook/**/*.{js,jsx,ts,tsx}',
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -21,7 +25,7 @@ module.exports = {
           active: '#B08A3C',
         },
         surface: {
-          base: '#FFFFFF',
+          base: '#FAF9F6',
           muted: '#F6F3EE',
           raised: '#ECE7DE',
           border: '#D8D2C8',
@@ -44,11 +48,21 @@ module.exports = {
     function ({ addUtilities }) {
       addUtilities({
         '.border-gradient': {
-          border: '1px solid transparent',
-          backgroundImage:
-            'linear-gradient(var(--tw-border-bg, #fff), var(--tw-border-bg, #fff)), linear-gradient(135deg, #f3e7cc 0%, #d7b56a 45%, #b8923f 100%)',
-          backgroundOrigin: 'border-box',
-          backgroundClip: 'padding-box, border-box',
+          position: 'relative',
+        },
+        '.border-gradient::after': {
+          content: '""',
+          position: 'absolute',
+          inset: '0',
+          padding: '1px',
+          borderRadius: 'inherit',
+          background:
+            'linear-gradient(135deg, #f3e7cc 0%, #d7b56a 45%, #b8923f 100%)',
+          WebkitMask:
+            'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'xor',
+          maskComposite: 'exclude',
+          pointerEvents: 'none',
         },
       });
     },
