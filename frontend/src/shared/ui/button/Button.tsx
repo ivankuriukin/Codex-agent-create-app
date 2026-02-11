@@ -1,5 +1,6 @@
 import { useObjectRef } from '@react-aria/utils';
 import classNames from 'classnames';
+import { AnimatePresence, motion } from 'framer-motion';
 import { forwardRef, type ReactElement, type ReactNode, type Ref } from 'react';
 import {
   type AriaButtonProps,
@@ -8,6 +9,7 @@ import {
   useFocusRing,
   useHover,
 } from 'react-aria';
+import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
 type ButtonVariant =
   | 'default'
@@ -18,12 +20,17 @@ type ButtonVariant =
   | 'link';
 
 type ButtonSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
 
 type BaseButtonProps = {
   className?: string;
   icon?: ReactNode;
   iconPlacement?: 'start' | 'end';
   loading?: boolean;
+  loadingState?: ButtonStatus;
+  loadingText?: string;
+  successText?: string;
+  errorText?: string;
   shape?: 'default' | 'circle' | 'round';
   size?: ButtonSize;
   startIcon?: ReactNode;
@@ -57,7 +64,7 @@ type ButtonComponent = {
 };
 
 const baseClassName =
-  'relative inline-flex items-center justify-center gap-2 bg-surface-base font-button font-medium transition-colors shadow-md';
+  'relative inline-flex items-center justify-center gap-2 overflow-hidden bg-surface-base font-button font-medium transition-colors shadow-md';
 
 const sizeClassName: Record<ButtonSize, string> = {
   sm: 'h-8 px-3 text-[14px] [&_[data-slot=start-icon]]:text-[14px] [&_[data-slot=end-icon]]:text-[14px]',
@@ -99,9 +106,9 @@ const variantClassName: Record<
     disabled: 'bg-state-disabled',
   },
   secondary: {
-    base: 'bg-secondary-base text-content-onSecondary border-transparent',
-    hover: 'hover:bg-secondary-hover',
-    active: 'active:bg-secondary-active',
+    base: "border border-secondary-active bg-gradient-to-br from-secondary-hover to-secondary-active text-content-onPrimary after:pointer-events-none after:absolute after:inset-0 after:rounded-[7px] after:border after:border-white/20 after:content-['']",
+    hover: 'hover:from-secondary-hover hover:to-secondary-active',
+    active: 'active:from-secondary-active active:to-secondary-active',
     disabled: 'bg-state-disabled',
   },
   ghost: {
@@ -130,6 +137,30 @@ const renderContent = (
   </>
 );
 
+const statusTransition = {
+  initial: { x: -24 },
+  animate: { x: 0 },
+  exit: { x: 24 },
+  transition: { duration: 0.25 },
+};
+
+const LoadingIndicator = ({ text }: { text: string }) => (
+  <span className="inline-flex items-center gap-2">
+    <span
+      className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+      aria-hidden="true"
+    />
+    <span>{text}</span>
+  </span>
+);
+
+const StatusIndicator = ({ text, icon }: { text: string; icon: ReactNode }) => (
+  <span className="inline-flex items-center gap-2">
+    {icon}
+    <span>{text}</span>
+  </span>
+);
+
 type UseButtonSharedParams<
   T extends Element,
   E extends 'a' | 'button',
@@ -148,6 +179,10 @@ const useButtonShared = <T extends Element, E extends 'a' | 'button'>(
     icon,
     iconPlacement = 'start',
     loading,
+    loadingState,
+    loadingText = 'Loading',
+    successText = 'Success',
+    errorText = 'Error',
     shape = 'default',
     size,
     startIcon,
@@ -160,7 +195,9 @@ const useButtonShared = <T extends Element, E extends 'a' | 'button'>(
     elementType,
     ref,
   } = params;
-  const resolvedLoading = Boolean(loading);
+  const resolvedState: ButtonStatus =
+    loadingState ?? (loading ? 'loading' : 'idle');
+  const resolvedLoading = resolvedState === 'loading';
   const disabled = Boolean(restProps.isDisabled || resolvedLoading);
   const { buttonProps, isPressed } = useButton(
     { ...restProps, isDisabled: disabled, elementType },
@@ -173,7 +210,7 @@ const useButtonShared = <T extends Element, E extends 'a' | 'button'>(
   const sharedProps = {
     ...mergeProps(buttonProps, focusProps, hoverProps),
     ref,
-    className,
+    className: classNames(className, disabled ? 'pointer-events-none' : null),
     'data-pressed': isPressed,
     'data-focus-visible': isFocusVisible,
     'data-hovered': isHovered,
@@ -187,9 +224,33 @@ const useButtonShared = <T extends Element, E extends 'a' | 'button'>(
     'aria-busy': resolvedLoading,
   };
 
+  const idleContent = renderContent(
+    resolvedStartIcon,
+    children,
+    resolvedEndIcon,
+  );
+  const content =
+    resolvedState === 'idle' ? (
+      idleContent
+    ) : resolvedState === 'loading' ? (
+      <LoadingIndicator text={loadingText} />
+    ) : resolvedState === 'success' ? (
+      <StatusIndicator
+        text={successText}
+        icon={<FiCheckCircle aria-hidden="true" />}
+      />
+    ) : (
+      <StatusIndicator
+        text={errorText}
+        icon={<FiXCircle aria-hidden="true" />}
+      />
+    );
+
   return {
     sharedProps,
-    content: renderContent(resolvedStartIcon, children, resolvedEndIcon),
+    content,
+    idleContent,
+    resolvedState,
   };
 };
 
@@ -200,6 +261,10 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
       icon,
       iconPlacement = 'start',
       loading,
+      loadingState,
+      loadingText,
+      successText,
+      errorText,
       shape = 'default',
       size,
       startIcon,
@@ -214,27 +279,45 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
     ref,
   ) {
     const anchorRef = useObjectRef(ref);
-    const { sharedProps, content } = useButtonShared({
-      className: classNames('text-blue-600 underline shadow-none', className),
-      icon,
-      iconPlacement,
-      loading,
-      shape,
-      size,
-      startIcon,
-      endIcon,
-      block,
-      variant,
-      danger,
-      children,
-      restProps,
-      elementType: 'a',
-      ref: anchorRef,
-    });
+    const { sharedProps, content, idleContent, resolvedState } =
+      useButtonShared({
+        className: classNames('text-blue-600 underline shadow-none', className),
+        icon,
+        iconPlacement,
+        loading,
+        loadingState,
+        loadingText,
+        successText,
+        errorText,
+        shape,
+        size,
+        startIcon,
+        endIcon,
+        block,
+        variant,
+        danger,
+        children,
+        restProps,
+        elementType: 'a',
+        ref: anchorRef,
+      });
 
     return (
       <a {...sharedProps} href={href}>
-        {content}
+        <span className="relative flex h-full w-full items-center justify-center overflow-hidden">
+          <span className="invisible pointer-events-none inline-flex h-full w-full items-center justify-center gap-2">
+            {idleContent}
+          </span>
+          <AnimatePresence mode="sync" initial={false}>
+            <motion.span
+              key={resolvedState}
+              className="absolute inset-0 inline-flex h-full w-full items-center justify-center gap-2"
+              {...statusTransition}
+            >
+              {content}
+            </motion.span>
+          </AnimatePresence>
+        </span>
       </a>
     );
   },
@@ -247,6 +330,10 @@ const ButtonBase = forwardRef<HTMLButtonElement, NonLinkButtonProps>(
       icon,
       iconPlacement = 'start',
       loading,
+      loadingState,
+      loadingText,
+      successText,
+      errorText,
       shape = 'default',
       size,
       startIcon,
@@ -278,25 +365,47 @@ const ButtonBase = forwardRef<HTMLButtonElement, NonLinkButtonProps>(
       loading ? 'cursor-wait' : null,
       className,
     );
-    const { sharedProps, content } = useButtonShared({
-      className: resolvedClassName,
-      icon,
-      iconPlacement,
-      loading,
-      shape,
-      size,
-      startIcon,
-      endIcon,
-      block,
-      variant,
-      danger,
-      children,
-      restProps,
-      elementType: 'button',
-      ref: buttonRef,
-    });
+    const { sharedProps, content, idleContent, resolvedState } =
+      useButtonShared({
+        className: resolvedClassName,
+        icon,
+        iconPlacement,
+        loading,
+        loadingState,
+        loadingText,
+        successText,
+        errorText,
+        shape,
+        size,
+        startIcon,
+        endIcon,
+        block,
+        variant,
+        danger,
+        children,
+        restProps,
+        elementType: 'button',
+        ref: buttonRef,
+      });
 
-    return <button {...sharedProps}>{content}</button>;
+    return (
+      <button {...sharedProps}>
+        <span className="relative flex h-full w-full items-center justify-center overflow-hidden">
+          <span className="invisible pointer-events-none inline-flex h-full w-full items-center justify-center gap-2">
+            {idleContent}
+          </span>
+          <AnimatePresence mode="sync" initial={false}>
+            <motion.span
+              key={resolvedState}
+              className="absolute inset-0 inline-flex h-full w-full items-center justify-center gap-2"
+              {...statusTransition}
+            >
+              {content}
+            </motion.span>
+          </AnimatePresence>
+        </span>
+      </button>
+    );
   },
 );
 

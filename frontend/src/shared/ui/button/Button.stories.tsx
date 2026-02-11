@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useEffect, useState } from 'react';
 import { FiArrowRight, FiPlus, FiX } from 'react-icons/fi';
 
 import { Button } from './Button';
@@ -109,4 +110,65 @@ export const Variants: Story = {
       </section>
     </div>
   ),
+};
+
+export const LoadingStates: Story = {
+  render: () => {
+    const [state, setState] = useState<
+      'idle' | 'loading' | 'success' | 'error'
+    >('idle');
+
+    useEffect(() => {
+      if (state === 'success' || state === 'error') {
+        const timeout = setTimeout(() => setState('idle'), 5000);
+        return () => clearTimeout(timeout);
+      }
+
+      return undefined;
+    }, [state]);
+
+    return (
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            className="rounded-md border border-surface-border px-3 py-1 text-sm"
+            onClick={() => setState('idle')}
+          >
+            Idle
+          </button>
+          <button
+            type="button"
+            className="rounded-md border border-surface-border px-3 py-1 text-sm"
+            onClick={() => setState('loading')}
+          >
+            Loading
+          </button>
+          <button
+            type="button"
+            className="rounded-md border border-surface-border px-3 py-1 text-sm"
+            onClick={() => setState('success')}
+          >
+            Success
+          </button>
+          <button
+            type="button"
+            className="rounded-md border border-surface-border px-3 py-1 text-sm"
+            onClick={() => setState('error')}
+          >
+            Error
+          </button>
+        </div>
+
+        <Button
+          loadingState={state}
+          loadingText="Saving..."
+          successText="Saved"
+          errorText="Failed"
+        >
+          Save changes
+        </Button>
+      </div>
+    );
+  },
 };

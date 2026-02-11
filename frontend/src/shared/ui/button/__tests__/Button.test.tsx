@@ -48,7 +48,11 @@ describe('Button', () => {
   });
 
   it('marks loading state', () => {
-    render(<Button loading>Load</Button>);
+    render(
+      <Button loading loadingText="Load">
+        Default
+      </Button>,
+    );
     const button = screen.getByText('Load').closest('button');
     expect(button).toHaveAttribute('data-loading', 'true');
     expect(button).toHaveAttribute('data-disabled', 'true');
