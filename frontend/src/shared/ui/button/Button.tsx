@@ -305,7 +305,10 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
     return (
       <a {...sharedProps} href={href}>
         <span className="relative flex h-full w-full items-center justify-center overflow-hidden">
-          <span className="invisible pointer-events-none inline-flex h-full w-full items-center justify-center gap-2">
+          <span
+            aria-hidden="true"
+            className="invisible pointer-events-none inline-flex h-full w-full items-center justify-center gap-2"
+          >
             {idleContent}
           </span>
           <AnimatePresence mode="sync" initial={false}>
@@ -391,7 +394,10 @@ const ButtonBase = forwardRef<HTMLButtonElement, NonLinkButtonProps>(
     return (
       <button {...sharedProps}>
         <span className="relative flex h-full w-full items-center justify-center overflow-hidden">
-          <span className="invisible pointer-events-none inline-flex h-full w-full items-center justify-center gap-2">
+          <span
+            aria-hidden="true"
+            className="invisible pointer-events-none inline-flex h-full w-full items-center justify-center gap-2"
+          >
             {idleContent}
           </span>
           <AnimatePresence mode="sync" initial={false}>

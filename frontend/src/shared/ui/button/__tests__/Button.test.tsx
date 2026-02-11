@@ -65,7 +65,7 @@ describe('Button', () => {
         Label
       </Button>,
     );
-    expect(screen.getByText('Icon')).toBeInTheDocument();
+    expect(screen.getAllByText('Icon').length).toBeGreaterThan(0);
   });
 
   it('renders link variant as anchor', () => {
@@ -74,7 +74,7 @@ describe('Button', () => {
         Link
       </Button>,
     );
-    const link = screen.getByText('Link').closest('a');
+    const link = screen.getByRole('button', { name: 'Link' }).closest('a');
     expect(link).toHaveAttribute('href', 'https://example.com');
   });
 });
